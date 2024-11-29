@@ -34,6 +34,10 @@ public class CSV {
 	private static final Logger log = Logger.getLogger(CSV.class.getName());
 
 	private List<String> lineasCSV;
+	
+	public void setLineasCSV(List<String> lineasCSV) {
+	    this.lineasCSV = lineasCSV;
+	}
 
 	// Constructor
 	public CSV() {
