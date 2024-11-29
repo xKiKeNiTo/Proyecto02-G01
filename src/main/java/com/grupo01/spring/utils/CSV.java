@@ -3,16 +3,20 @@ package com.grupo01.spring.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
+//import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
+//import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.model.Platform;
+//import com.grupo01.spring.service.JuegoService;
+import com.grupo01.spring.service.JuegoServiceImpl;
 
 /**
  * Clase para las utilidades del CSV
@@ -22,11 +26,15 @@ import com.grupo01.spring.model.Platform;
  */
 public class CSV {
 
-	public static File fichero = new File("src/main/resources/vgsales.csv");
+	public static File fichero = new File("vgsales.csv");
+
 
 	private static final Logger log = Logger.getLogger(CSV.class.getName());
 
 	private List<String> lineasCSV;
+
+	@Autowired
+	private JuegoServiceImpl juegoService;
 
 	// Constructor
 	public CSV() {
@@ -57,9 +65,7 @@ public class CSV {
 	}
 
 	/**
-	 * Obtener los juegos leídos del archivo CSV.
-	 * 
-	 * @return Lista de listas representando las filas del CSV.
+	 * Obtener los juegos leídos del archivo CSV y guardarlos en la base de datos.
 	 */
 	public List<Juego> getJuegos() {
 		List<Juego> juegos = new ArrayList<>();
@@ -72,40 +78,32 @@ public class CSV {
 				int rank = Integer.parseInt(valores[0].trim());
 				String name = valores[1].trim();
 
-				// Convertir plataforma usando el método fromString de Platform
 				Platform platform = Platform.fromString(valores[2].trim());
 
-				// Manejar años inválidos (por ejemplo, "N/A")
 				int year;
 				try {
 					year = Integer.parseInt(valores[3].trim());
 				} catch (NumberFormatException e) {
-					year = 0; // Valor predeterminado para años inválidos
+					year = 0; // Valor predeterminado
 				}
 
-				// Convertir género usando el método fromString de Genre
 				Genre genre = Genre.fromString(valores[4].trim());
-
 				String publisher = valores[5].trim();
-
-				// Manejar posibles errores de formato en las ventas
 				double naSales = parseDoubleSafe(valores[6]);
 				double euSales = parseDoubleSafe(valores[7]);
 				double jpSales = parseDoubleSafe(valores[8]);
 				double otherSales = parseDoubleSafe(valores[9]);
 				double globalSales = parseDoubleSafe(valores[10]);
 
-				// Crear objeto Juego (sin ID porque será gestionado por la base de datos)
 				Juego juego = new Juego(0, rank, name, platform, year, genre, publisher, naSales, euSales, jpSales,
 						otherSales, globalSales);
-
 				juegos.add(juego);
 
 			} catch (IllegalArgumentException e) {
 				System.err.println("Error al procesar línea: " + linea + " -> " + e.getMessage());
 			}
 		}
-		return juegos;
+		return juegos; // Asegúrate de que este método devuelva la lista
 	}
 
 	/**
