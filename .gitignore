@@ -141,4 +141,7 @@ buildNumber.properties
 .history
 .ionide
 
+# Ignore application.properties
+src/main/resources/application.properties
+
 # End of https://www.toptal.com/developers/gitignore/api/java,database,maven,eclipse,visualstudiocode
