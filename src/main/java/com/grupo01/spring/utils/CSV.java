@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
@@ -24,17 +25,15 @@ import com.grupo01.spring.service.JuegoServiceImpl;
  * @version 1.0
  * @author kikev
  */
+
+@Component
 public class CSV {
 
 	public static File fichero = new File("vgsales.csv");
 
-
 	private static final Logger log = Logger.getLogger(CSV.class.getName());
 
 	private List<String> lineasCSV;
-
-	@Autowired
-	private JuegoServiceImpl juegoService;
 
 	// Constructor
 	public CSV() {

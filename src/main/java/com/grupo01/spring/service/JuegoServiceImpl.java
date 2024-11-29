@@ -12,31 +12,29 @@ import com.grupo01.spring.utils.CSV;
 @Service
 public class JuegoServiceImpl implements JuegoService {
 
-	// private static final Logger log =
-	// LoggerFactory.getLogger(JuegoController.class);
-
 	@Autowired
 	private JuegoDao juegoDao;
 
-	@Autowired
-	private CSV csv;
-
-	// Para Listar Todos
 	@Override
 	public List<Juego> findAll() {
 		return juegoDao.findAll();
 	}
 
 	public int saveCsv(List<Juego> juegos) {
+		int batchSize = 100; // Tamaño para insertar en la base de datos por partes
+		int totalSaved = 0;
+
 		try {
-			// Leer el archivo CSV y obtener la lista de juegos
-			csv.leerCSV();
-			// Guardar todos los juegos en la base de datos
-			juegoDao.saveAll(juegos);
-			return juegos.size(); // Retornar el número total de juegos guardados
+			for (int i = 0; i < juegos.size(); i += batchSize) {
+				// Dividir la lista en lotes
+				List<Juego> batch = juegos.subList(i, Math.min(i + batchSize, juegos.size()));
+				juegoDao.saveAll(batch); // Guardar en la base de datos
+				totalSaved += batch.size();
+			}
 		} catch (Exception e) {
 			throw new RuntimeException("Error al guardar datos desde el CSV: " + e.getMessage(), e);
 		}
-	}
 
+		return totalSaved; // Retornar el total de registros guardados
+	}
 }

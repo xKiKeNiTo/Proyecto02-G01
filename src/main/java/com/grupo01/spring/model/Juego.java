@@ -22,15 +22,15 @@ public class Juego {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	
-	private int rank;		
+	private long rank;		
 	private String name;
 	
 	@Enumerated(EnumType.STRING)
 	private Platform platform;
 	
-	private int year;
+	private long year;
 	
 	@Enumerated(EnumType.STRING)
 	private Genre genre;
@@ -65,7 +65,7 @@ public class Juego {
 	}
 
 	// Getters & Setters
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -73,7 +73,7 @@ public class Juego {
 		this.id = id;
 	}
 
-	public int getRank() {
+	public long getRank() {
 		return rank;
 	}
 
@@ -97,7 +97,7 @@ public class Juego {
 		this.platform = platform;
 	}
 
-	public int getYear() {
+	public long getYear() {
 		return year;
 	}
 
