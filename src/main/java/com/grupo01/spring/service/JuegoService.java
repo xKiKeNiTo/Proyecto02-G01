@@ -7,4 +7,12 @@ public interface JuegoService {
 
     //Para listar todos los juegos
     public List<Juego> findAll();
+    
+    /**
+     * Guarda un juego en la base de datos.
+     * 
+     * @param juego El objeto Juego a guardar.
+     * @return El objeto guardado (incluyendo el ID generado).
+     */
+    public Juego save(Juego juego);
 }
