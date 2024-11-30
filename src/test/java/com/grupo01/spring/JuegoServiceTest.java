@@ -16,7 +16,7 @@ import com.grupo01.spring.repository.JuegoDao;
 import com.grupo01.spring.service.JuegoServiceImpl;
 
 @SpringBootTest
-public class DatabaseTest {
+public class JuegoServiceTest {
 
     @Mock
     private JuegoDao juegoDao;

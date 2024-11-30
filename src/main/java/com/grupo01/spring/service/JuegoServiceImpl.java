@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.repository.JuegoDao;
-import com.grupo01.spring.utils.CSV;
 
 @Service
 public class JuegoServiceImpl implements JuegoService {
@@ -37,4 +36,9 @@ public class JuegoServiceImpl implements JuegoService {
 
 		return totalSaved; // Retornar el total de registros guardados
 	}
+
+	public Juego save(Juego juego) {
+		return juegoDao.save(juego);
+	}
+
 }
