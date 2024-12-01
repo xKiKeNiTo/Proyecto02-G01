@@ -54,5 +54,17 @@ public class JuegoController {
 		Juego juegoGuardado = juegoService.save(nuevoJuego);
 		return ResponseEntity.ok(juegoGuardado);
 	}
+	
+	/**
+	 * Edita un juego existente.
+	 *
+	 * @param juegoExistente el juego con los datos actualizados
+	 * @return ResponseEntity con el juego editado
+	 */	
+	@PostMapping("/edit")
+	public ResponseEntity<Juego> editJuego(@RequestBody @Valid Juego juegoExistente) {
+		Juego juegoEditado = juegoService.save(juegoExistente);
+		return ResponseEntity.ok(juegoEditado);
+	}
 
 }
