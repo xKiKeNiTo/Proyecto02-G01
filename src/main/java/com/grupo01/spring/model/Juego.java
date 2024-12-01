@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+
 
 /**
  * Clase Juego Modelo para los objetos de tipo Juego con los atributos, getters,
@@ -24,7 +26,9 @@ public class Juego {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private long rank;		
+	private long rank;	
+	
+    @NotEmpty(message = "El nombre del juego no puede estar vacío")
 	private String name;
 	
 	@Enumerated(EnumType.STRING)

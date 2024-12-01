@@ -22,10 +22,8 @@ public class CSVTest {
 	void setUp() {
 		// Inicializa la instancia de CSV
 		csv = new CSV();
-
 	}
-	
-	
+		
 	@Test
 	void leeCSV() throws IOException {
 		// Verifica que el archivo existe antes de leerlo
