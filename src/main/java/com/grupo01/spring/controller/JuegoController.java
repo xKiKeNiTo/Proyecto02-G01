@@ -14,6 +14,8 @@ import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.service.JuegoServiceImpl;
 import com.grupo01.spring.utils.CSV;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/juegos")
 public class JuegoController {
@@ -48,7 +50,7 @@ public class JuegoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Juego> saveJuego(@RequestBody Juego nuevoJuego) {
+	public ResponseEntity<Juego> saveJuego(@RequestBody @Valid Juego nuevoJuego) {
 		Juego juegoGuardado = juegoService.save(nuevoJuego);
 		return ResponseEntity.ok(juegoGuardado);
 	}

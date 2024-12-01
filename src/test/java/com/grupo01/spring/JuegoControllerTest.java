@@ -47,7 +47,7 @@ public class JuegoControllerTest {
         // Realización de la solicitud simulada al endpoint
         mockMvc.perform(post("/juegos/save-csv")) // Solicitud POST al endpoint
             .andExpect(status().isOk()) // Comprueba que el estado HTTP es 200 OK
-            .andExpect(content().string("Se han guardado 2 juegos desde el CSV")); // Verifica el mensaje en la respuesta
+            .andExpect(content().string("Se han guardado 2 juegos desde el archivo CSV.")); // Verifica el mensaje en la respuesta
         
         // Verificación de interacciones
         verify(csv, times(1)).leerCSV(); // Asegura que se llamó al método leerCSV()
@@ -67,6 +67,6 @@ public class JuegoControllerTest {
 	        .andExpect(status().isBadRequest())
 	        // Verifica que el mensaje de error incluye el detalle esperado
 	        .andExpect(jsonPath("$.errors").exists()) // Se asegura de que hay un campo 'errors'
-	        .andExpect(jsonPath("$.errors[0]").value("El nombre del juego no puede estar vacío"));
+	        .andExpect(jsonPath("$.errors[0]").value("El nombre del juego no puede estar vacío"));  // Verifica que el primer mensaje de error es el esperado
 	}		
 }
