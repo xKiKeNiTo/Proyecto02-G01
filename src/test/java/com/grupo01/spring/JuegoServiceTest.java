@@ -42,7 +42,7 @@ public class JuegoServiceTest {
 	private JuegoServiceImpl juegoServiceImpl;
 
 	@Test
-	public void guardaCsv() {
+	public void guardarCsvYVerificarRegistrosGuardadosCorrectamente() {
 		List<Juego> juegos = new ArrayList<>();
 		for (int i = 0; i < 250; i++) { // Crear 250 registros simulados
 			Juego juego = new Juego();
@@ -63,7 +63,7 @@ public class JuegoServiceTest {
 	}
 
 	@Test
-	public void guardaJuego() {
+	public void guardarJuegoYVerificarQueSeGuardaCorrectamente() {
 		// Datos de entrada
 		Juego juego = new Juego(0, 1, "Super Mario Bros", Platform.NES, 1985, Genre.Platform, "Nintendo", 29.08, 3.58,
 				6.81, 0.77, 40.24);
@@ -86,7 +86,7 @@ public class JuegoServiceTest {
 	}
 
 	@Test
-	public void testDevuelveJuegos() {
+	public void listarTodosLosJuegosYVerificarQueSeDevuelvenCorrectamente() {
 	    List<Juego> juegos = new ArrayList<>();
 	    for (int i = 0; i < 5; i++) { // Crear 5 registros simulados
 	        Juego juego = new Juego();
@@ -111,7 +111,7 @@ public class JuegoServiceTest {
 
 
 	@Test
-	public void modificaJuego() {
+	public void modificarJuegoExistenteYVerificarActualizacionCorrecta() {
 		// Mockear el comportamiento del repositorio
 		when(juegoDao.existsById((long) 1)).thenReturn(true);
 		when(juegoDao.save(juegoExistente)).thenReturn(juegoExistente);
@@ -130,7 +130,7 @@ public class JuegoServiceTest {
 	}
 
 	@Test
-	public void modificaInexistente() {
+	public void lanzarExcepcionCuandoSeIntentaModificarJuegoInexistente() {
 		// Mockear el comportamiento del repositorio para ID inexistente
 		when(juegoDao.existsById((long) 3)).thenReturn(false);
 
@@ -142,4 +142,27 @@ public class JuegoServiceTest {
 			juegoServiceImpl.save(juegoInexistente);
 		});
 	}
+	
+	@Test
+    public void listarJuegosFiltradosPorGeneroYVerificarResultadosCorrectos() {
+        // Crear datos simulados
+        List<Juego> juegos = new ArrayList<>();
+        juegos.add(new Juego(1, 1, "Juego Acción 1", Platform.PS4, 2021, Genre.Action, "Sony", 10.5, 8.3, 4.7, 2.1, 25.6));
+        juegos.add(new Juego(2, 2, "Juego Acción 2", Platform.NES, 2020, Genre.Action, "Microsoft", 12.0, 9.0, 5.0, 3.0, 29.0));
+
+        // Configurar el mock para que devuelva la lista filtrada
+        when(juegoDao.findByGenre(Genre.Action)).thenReturn(juegos);
+
+        // Llamar al método del servicio
+        List<Juego> resultado = juegoServiceImpl.findByGenre(Genre.Action);
+
+        // Verificar los resultados
+        assertEquals(2, resultado.size(), "La cantidad de juegos filtrados no coincide");
+        assertEquals("Juego Acción 1", resultado.get(0).getName(), "El primer juego filtrado no coincide");
+        assertEquals("Juego Acción 2", resultado.get(1).getName(), "El segundo juego filtrado no coincide");
+
+        // Verificar que el repositorio fue llamado exactamente una vez
+        verify(juegoDao, times(1)).findByGenre(Genre.Action);
+    }
+	
 }

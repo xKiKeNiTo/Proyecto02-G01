@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.service.JuegoServiceImpl;
 import com.grupo01.spring.utils.CSV;
@@ -89,6 +90,16 @@ public class JuegoController {
 		} else {
 			return ResponseEntity.status(404).body(new RespuestaApi<>("El juego no existe.", 404, null));
 		}
+	}
+
+	@GetMapping("/genero/{genre}")
+	public ResponseEntity<?> findByGenre(@PathVariable Genre genre) {
+		List<Juego> juegos = juegoService.findByGenre(genre);
+
+		if (juegos.isEmpty()) {
+			return ResponseEntity.status(204).body("No se encontraron juegos para el género especificado.");
+		}
+		return ResponseEntity.ok(juegos);
 	}
 
 }

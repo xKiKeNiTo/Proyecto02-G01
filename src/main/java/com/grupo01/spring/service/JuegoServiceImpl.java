@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.repository.JuegoDao;
 
@@ -57,6 +58,10 @@ public class JuegoServiceImpl implements JuegoService {
 		} else {
 			return null;
 		}
+	}
+
+	public List<Juego> findByGenre(Genre genre) {
+		return juegoDao.findByGenre(genre);
 	}
 
 }
