@@ -1,7 +1,5 @@
 package com.grupo01.spring.controller;
 
-<<<<<<< HEAD
-=======
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +15,20 @@ import com.grupo01.spring.service.JuegoServiceImpl;
 import com.grupo01.spring.utils.CSV;
 
 import jakarta.validation.Valid;
->>>>>>> feature
 
 @RestController
 @RequestMapping("/juegos")
 public class JuegoController {
-
-<<<<<<< HEAD
     @Autowired
     private JuegoService service;
+	/**
+	 * Lista todos los juegos.
+	 *
+	 * @param juegoExistente el juego con los datos actualizados
+	 * @return ResponseEntity con el juego editado
+	 */
 
-    private static final Logger log = LoggerFactory.getLogger(JuegoController.class);
+	private static final Logger log = LoggerFactory.getLogger(JuegoController.class);
 
     //Listar juegos
     @GetMapping
@@ -43,7 +44,6 @@ public class JuegoController {
                 new RespuestaApi<>("Lista de juegos encontrada",200,juegos)
         );
     }
-=======
 	@Autowired
 	private CSV csv; // Clase para manejar el CSV
 
@@ -90,6 +90,4 @@ public class JuegoController {
 		Juego juegoEditado = juegoService.save(juegoExistente);
 		return ResponseEntity.ok(juegoEditado);
 	}
-
->>>>>>> feature
 }
