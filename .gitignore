@@ -144,4 +144,6 @@ buildNumber.properties
 # Ignore application.properties
 src/main/resources/application.properties
 
+# Ignore intelliJ
+.idea
 # End of https://www.toptal.com/developers/gitignore/api/java,database,maven,eclipse,visualstudiocode

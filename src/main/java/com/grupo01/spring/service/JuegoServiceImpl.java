@@ -9,17 +9,36 @@ import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.repository.JuegoDao;
 
 @Service
-public class JuegoServiceImpl implements JuegoService{
+public class JuegoServiceImpl implements JuegoService {
 
-    // private static final Logger log = LoggerFactory.getLogger(JuegoController.class);	
-
-    @Autowired
+	@Autowired
 	private JuegoDao juegoDao;
-	
-	//Para Listar Todos
-    @Override
-	public List<Juego> findAll(){
+
+	@Override
+	public List<Juego> findAll() {
 		return juegoDao.findAll();
+	}
+
+	public int saveCsv(List<Juego> juegos) {
+		int batchSize = 100; // Tamaño para insertar en la base de datos por partes
+		int totalSaved = 0;
+
+		try {
+			for (int i = 0; i < juegos.size(); i += batchSize) {
+				// Dividir la lista en lotes
+				List<Juego> batch = juegos.subList(i, Math.min(i + batchSize, juegos.size()));
+				juegoDao.saveAll(batch); // Guardar en la base de datos
+				totalSaved += batch.size();
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Error al guardar datos desde el CSV: " + e.getMessage(), e);
+		}
+
+		return totalSaved; // Retornar el total de registros guardados
+	}
+
+	public Juego save(Juego juego) {
+		return juegoDao.save(juego);
 	}
 
 }
