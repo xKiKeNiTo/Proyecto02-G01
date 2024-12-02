@@ -7,7 +7,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,43 +28,6 @@ public class JuegoServiceTest {
 	private JuegoDao juegoDao;
 
 	private Juego juegoExistente;
-
-	@Test
-	public void testDevuelveJuegos() {
-		List<Juego> juegos = new ArrayList<>();
-		for (int i = 0; i < 5; i++) { // Crear 250 registros simulados
-			Juego juego = new Juego();
-			juego.setRank(i + 1);
-			juego.setName("Juego " + (i + 1));
-			juegos.add(juego);
-		}
-
-		// Configurar el mock para que devuelva la lista simulada cuando se llame a
-		// findAll
-		when(juegoDao.findAll()).thenReturn(juegos);
-
-		// Llamo al metodo del servicio
-		List<Juego> resultado = juegoServiceImpl.findAll();
-
-		// Verificar resultados
-		assertEquals(juegos.size(), resultado.size(), "La cantidad de juegos devuelta no coincide");
-		assertEquals("Juego 1", resultado.getFirst().getName(), "El primer juego no coincide");
-
-		// Verificar que el repositorio se llamó la cantidad correcta de veces
-		int expectedBatchCalls = (int) Math.ceil(juegos.size() / 100.0);
-		verify(juegoDao, times(expectedBatchCalls)).saveAll(anyList());
-	}
-
-	@Test
-	public void testSaveCsv() {
-		List<Juego> juegos = new ArrayList<>();
-		for (int i = 0; i < 250; i++) { // Crear 250 registros simulados
-			Juego juego = new Juego();
-			juego.setRank(i + 1);
-			juego.setName("Juego " + (i + 1));
-			juegos.add(juego);
-		}
-	}
 
 	@BeforeEach
 	public void setUp() {
@@ -122,6 +84,31 @@ public class JuegoServiceTest {
 		assertEquals(Platform.NES, juegoGuardado.getPlatform());
 		assertEquals(Genre.Platform, juegoGuardado.getGenre());
 	}
+
+	@Test
+	public void testDevuelveJuegos() {
+	    List<Juego> juegos = new ArrayList<>();
+	    for (int i = 0; i < 5; i++) { // Crear 5 registros simulados
+	        Juego juego = new Juego();
+	        juego.setRank(i + 1);
+	        juego.setName("Juego " + (i + 1));
+	        juegos.add(juego);
+	    }
+
+	    // Configurar el mock para que devuelva la lista simulada
+	    when(juegoDao.findAll()).thenReturn(juegos);
+
+	    // Llamar al método del servicio
+	    List<Juego> resultado = juegoServiceImpl.findAll();
+
+	    // Verificar resultados
+	    assertEquals(juegos.size(), resultado.size(), "La cantidad de juegos devuelta no coincide");
+	    assertEquals("Juego 1", resultado.get(0).getName(), "El primer juego no coincide");
+
+	    // Verificar que el repositorio se llamó
+	    verify(juegoDao, times(1)).findAll();
+	}
+
 
 	@Test
 	public void modificaJuego() {
