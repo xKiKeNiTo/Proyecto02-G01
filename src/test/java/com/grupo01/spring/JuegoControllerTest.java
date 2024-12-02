@@ -68,5 +68,50 @@ public class JuegoControllerTest {
 	        // Verifica que el mensaje de error incluye el detalle esperado
 	        .andExpect(jsonPath("$.errors").exists()) // Se asegura de que hay un campo 'errors'
 	        .andExpect(jsonPath("$.errors[0]").value("El nombre del juego no puede estar vacío"));  // Verifica que el primer mensaje de error es el esperado
-	}		
+	}
+	
+	@Test
+	public void modificaJuegoEndpoint() throws Exception {
+		// Datos simulados de juego existente a editar
+		Juego juegoExistente = new Juego(1, 7,"Super Mario Bros",Platform.NES,1985,Genre.Platform,"Nintendo",40.24,28.32,6.81,0.77,75.84);
+		
+		// Datos simulados del juego actualizados
+		Juego juegoEditado = new Juego(1, 7,"Super Mario Bros Editado",Platform.NES,1985,Genre.Platform,"Nintendo",40.24,28.32,7.00,0.77,75.84);
+		
+		// Simula el comportamiento del servicio
+		when(juegoService.save(any(Juego.class))).thenReturn(juegoEditado);
+		
+		// JSON del juego actualizado
+		String juegoEditadoJson = """
+		        {
+		            "id": 1,
+		            "rank": 7,
+		            "name": "Super Mario Bros Editado",
+		            "platform": "NES",
+		            "year": 1985,
+		            "genre": "Platform",
+		            "publisher": "Nintendo",
+		            "naSales": 40.24,
+		            "euSales": 28.32,
+		            "jpSales": 7.00,
+		            "otherSales": 0.77,
+		            "globalSales": 75.84
+		        }
+		        """;
+		// Realiza la solicitud POST al endpoint /juegos/edit
+	    mockMvc.perform(post("/juegos/edit")
+	            .content(juegoEditadoJson)
+	            .contentType(MediaType.APPLICATION_JSON))
+	    // Verifica el estado HTTP 200 OK
+	    		.andExpect(status().isOk())
+	    // Verifica los campos de respuesta si están cambiados
+	    		.andExpect(jsonPath("$.id").value(1))
+	            .andExpect(jsonPath("$.name").value("Super Mario Bros Editado"))
+	            .andExpect(jsonPath("$.jpSales").value(7.00));
+	    
+	    // Comprueba que el método save fue llamado una vez con los datos actualizados
+	    verify(juegoService, times(1)).save(any(Juego.class));
+	}
+		
+	
 }
