@@ -137,26 +137,43 @@ public class JuegoControllerTest {
 		verify(juegoService, times(1)).findByGenre(Genre.Action);
 	}
 
-	
 	@Test
-	public void llamoEndpointVerificoLlamadaServicioSiglo() throws Exception {		
+	public void llamoEndpointVerificoLlamadaServicioSiglo() throws Exception {
 		// Preparación de datos simulados
-        List<Juego> juegos = Arrays.asList(
-            new Juego(1, 7,"Super Mario Bros",Platform.NES,1985,Genre.Platform,"Nintendo",40.24,28.32,6.81,0.77,75.84),
-            new Juego(2, 23,"Juego Ejemplo",Platform.PC,1984,Genre.Puzzle,"Nintendo",23.20,2.26,4.22,0.58,30.26)
-        );
-		
+		List<Juego> juegos = Arrays.asList(
+				new Juego(1, 7, "Super Mario Bros", Platform.NES, 1985, Genre.Platform, "Nintendo", 40.24, 28.32, 6.81,
+						0.77, 75.84),
+				new Juego(2, 23, "Juego Ejemplo", Platform.PC, 1984, Genre.Puzzle, "Nintendo", 23.20, 2.26, 4.22, 0.58,
+						30.26));
+
 		// Configuración del mock
-        when(juegoService.listarPorSiglo()).thenReturn(juegos);
-        
+		when(juegoService.listarPorSiglo()).thenReturn(juegos);
+
 		// Llamada al endpoint y verificar el comportamiento
-		mockMvc.perform(get("/juegos/por-siglo"))
-		.andExpect(status().isOk())  // Status 200
-        .andExpect(jsonPath("$.length()").value(2)); // Verificar que hay 2 elementos
-		
+		mockMvc.perform(get("/juegos/por-siglo")).andExpect(status().isOk()) // Status 200
+				.andExpect(jsonPath("$.length()").value(2)); // Verificar que hay 2 elementos
+
 		// Verificar que el servicio fue llamado una vez
-        verify(juegoService, times(1)).listarPorSiglo();
-	}		
-		
-	
+		verify(juegoService, times(1)).listarPorSiglo();
+	}
+
+	@Test
+	public void llamoEndpointVerificoLlamadaServicioConsola() throws Exception {
+
+		String consola = "X360";
+		List<Juego> juegosMock = Arrays.asList(
+				new Juego(1, 1, "Call of Duty Black Ops", Platform.X360, 2010, Genre.Shooter, "Treyarch", 30.56, 15.71,
+						7.61, 2.71, 56.59),
+				new Juego(2, 2, "Fable II", Platform.X360, 2008, Genre.Role_Playing, "Lionhead Studios", 15.14, 8.74,
+						4.52, 1.1, 29.50));
+
+		when(juegoService.listarPorConsola(consola)).thenReturn(juegosMock);
+
+		mockMvc.perform(get("/juegos/consola/{consola}", consola).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+
+		verify(juegoService).listarPorConsola(consola);
+
+	}
+
 }
