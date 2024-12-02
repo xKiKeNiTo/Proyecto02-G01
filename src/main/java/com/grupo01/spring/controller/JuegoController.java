@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,5 +68,16 @@ public class JuegoController {
 		Juego juegoEditado = juegoService.save(juegoExistente);
 		return ResponseEntity.ok(juegoEditado);
 	}
+	
+    @DeleteMapping("/id")
+    public ResponseEntity<Juego> deleteById(@PathVariable int id) {
+        boolean seHaBorrado = juegoService.deleteById(id); 
+        if (seHaBorrado) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+        }
+    }
+	
 
 }

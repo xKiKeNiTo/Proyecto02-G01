@@ -15,4 +15,7 @@ public interface JuegoService {
      * @return El objeto guardado (incluyendo el ID generado).
      */
     public Juego save(Juego juego);
+    
+    public boolean deleteById(int id);
+    
 }
