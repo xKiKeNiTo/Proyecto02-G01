@@ -39,7 +39,7 @@ public class Juego {
 	@Enumerated(EnumType.STRING)
 	private Platform platform;
 
-	@Min(value = 0, message = "El año debe ser mayor o igual a 0")
+	@Min(value = 1950, message = "El año debe ser mayor o igual a 1950")
 	private long year;
 
 	@NotNull(message = "El género no puede estar vacío")
