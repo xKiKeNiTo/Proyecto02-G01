@@ -1,9 +1,12 @@
 package com.grupo01.spring;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -68,4 +71,35 @@ public class JuegoControllerTest {
 				.andExpect(jsonPath("$.errors").exists()) // Se asegura de que hay un campo 'errors'
 				.andExpect(jsonPath("$.errors[0]").value("El nombre del juego no puede estar vacío")); // Verifica que el primer mensaje de error es el esperado
 	}
+
+	@Test
+	public void llamoEndpointVerificoLlamadaServicioYear() throws Exception {
+		// Año para filtrar juegos
+		long year = 2001;
+
+		List<Juego> juegos = new ArrayList<>();
+		for (int i = 0; i < 5; i++) { // Crear 5 registros simulados
+			Juego juego = new Juego();
+			juego.setRank(i + 1);
+			juego.setName("Juego " + (i + 1));
+			juego.setYear(2001);
+			juegos.add(juego);
+		}
+
+		// Simular el comportamiento del servicio
+		when(juegoService.findByYear(year)).thenReturn(juegos);
+
+		// Realizar una solicitud GET al endpoint
+		mockMvc.perform(get("/juegos/year")
+						.param("year", String.valueOf(year)) // Añadir parámetro al request
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk()) // Verificar que el estado HTTP es 200 OK
+				.andExpect(jsonPath("$.length()").value(juegos.size()))// Verificar que la respuesta tiene la cantidad correcta de juegos
+				.andExpect(jsonPath("$[0].name").value("Juego 1"));
+
+
+		// Verificar que el método findByYear del servicio se llamó con el parámetro correcto
+		verify(juegoService, times(1)).findByYear(year);
+	}
+
 }

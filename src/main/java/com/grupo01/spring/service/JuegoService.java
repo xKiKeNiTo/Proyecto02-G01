@@ -2,7 +2,6 @@ package com.grupo01.spring.service;
 import java.util.List;
 
 import com.grupo01.spring.model.Juego;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface JuegoService{
     /**
@@ -14,5 +13,7 @@ public interface JuegoService{
     public Juego save(Juego juego);
     
     public boolean deleteById(int id);
+
+    public List<Juego> findByYear(long year);
     
 }

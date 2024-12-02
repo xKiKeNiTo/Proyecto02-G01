@@ -3,21 +3,15 @@ package com.grupo01.spring.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-//import java.io.FileWriter;
 import java.io.IOException;
-//import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.model.Platform;
-//import com.grupo01.spring.service.JuegoService;
-import com.grupo01.spring.service.JuegoServiceImpl;
 
 /**
  * Clase para las utilidades del CSV
@@ -30,8 +24,6 @@ import com.grupo01.spring.service.JuegoServiceImpl;
 public class CSV {
 
 	public static File fichero = new File("vgsales.csv");
-
-	private static final Logger log = Logger.getLogger(CSV.class.getName());
 
 	private List<String> lineasCSV;
 	

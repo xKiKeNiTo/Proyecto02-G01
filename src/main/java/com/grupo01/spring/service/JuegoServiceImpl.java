@@ -53,5 +53,8 @@ public class JuegoServiceImpl implements JuegoService {
 		}
 		return false;
 	}
-
+	@Override
+	public List<Juego> findByYear(long year) {
+		return juegoDao.findByYear(year);
+	}
 }

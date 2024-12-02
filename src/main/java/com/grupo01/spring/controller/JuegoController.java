@@ -89,6 +89,14 @@ public class JuegoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
         }
     }
-	
 
+	@GetMapping("/{year}")
+	public ResponseEntity<RespuestaApi<List<Juego>>> findByYear(@PathVariable long year) {
+		List<Juego> juegos = juegoService.findByYear(year);
+		if (juegos.isEmpty()) {
+			return ResponseEntity.status(204).body(new RespuestaApi<>("No se encontraron juegos para ese año", 204, null));
+		}
+
+		return ResponseEntity.status(200).body(new RespuestaApi<>("Lista de juegos encontrada", 200, juegos));
+	}
 }
