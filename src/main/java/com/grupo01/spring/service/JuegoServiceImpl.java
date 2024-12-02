@@ -46,7 +46,12 @@ public class JuegoServiceImpl implements JuegoService {
 		return juegoDao.save(juego);
 	}
 
-	public void deleteById(Integer id) {
-		juegoDao.deleteById(id);
+	public boolean deleteById(int id) {
+		if (juegoDao.existsById(id)) {
+			juegoDao.deleteById(id);
+			return true;
+		}
+		return false;
 	}
+
 }
