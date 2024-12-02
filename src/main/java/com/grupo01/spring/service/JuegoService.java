@@ -15,4 +15,8 @@ public interface JuegoService {
      * @return El objeto guardado (incluyendo el ID generado).
      */
     public Juego save(Juego juego);
+    
+    // Custom para listar por siglo
+    public List<Juego> listarPorSiglo();
+    
 }

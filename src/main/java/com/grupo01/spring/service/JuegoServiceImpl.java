@@ -41,4 +41,9 @@ public class JuegoServiceImpl implements JuegoService {
 		return juegoDao.save(juego);
 	}
 
+	@Override
+	public List<Juego> listarPorSiglo() {
+		return juegoDao.listarPorSiglo();
+	}
+
 }
