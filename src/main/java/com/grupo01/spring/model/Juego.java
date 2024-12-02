@@ -7,47 +7,65 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
-
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
  * Clase Juego Modelo para los objetos de tipo Juego con los atributos, getters,
  * setters y toString 29/11/2024
+ * 
  * @version 1
- * @author raul_
- * 29/11/2014
+ * @author raul_ 29/11/2014
  */
 
 @Entity
-@Table(name="juegos")
+@Table(name = "juegos")
 public class Juego {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
-	
-	private long rank;	
-	
-    @NotEmpty(message = "El nombre del juego no puede estar vacío")
+
+	@NotNull(message = "El ranking no puede estar vacío")
+	@Min(value = 1, message = "El ranking debe ser mayor o igual a 1")
+	private long rank;
+
+	@NotEmpty(message = "El nombre del juego no puede estar vacío")
 	private String name;
-	
+
+	@NotNull(message = "La plataforma no puede estar vacía")
 	@Enumerated(EnumType.STRING)
 	private Platform platform;
-	
+
+	@Min(value = 0, message = "El año debe ser mayor o igual a 0")
 	private long year;
-	
+
+	@NotNull(message = "El género no puede estar vacío")
 	@Enumerated(EnumType.STRING)
 	private Genre genre;
-	
+
+	@Size(max = 100, message = "El nombre del publicador no puede tener más de 100 caracteres")
 	private String publisher;
+
+	@Min(value = 0, message = "Las ventas en Norteamérica no pueden ser negativas")
 	private double naSales;
+
+	@Min(value = 0, message = "Las ventas en Europa no pueden ser negativas")
 	private double euSales;
+
+	@Min(value = 0, message = "Las ventas en Japón no pueden ser negativas")
 	private double jpSales;
+
+	@Min(value = 0, message = "Las ventas en otras regiones no pueden ser negativas")
 	private double otherSales;
+
+	@Min(value = 0, message = "Las ventas globales no pueden ser negativas")
 	private double globalSales;
-	
-	// Contructores	
-	public Juego(int id, int rank, String name, Platform platform, int year, Genre genre, String publisher,
+
+	// Contructores
+	public Juego(long id, long rank, String name, Platform platform, long year, Genre genre, String publisher,
 			double naSales, double euSales, double jpSales, double otherSales, double globalSales) {
 		super();
 		this.id = id;
@@ -63,7 +81,7 @@ public class Juego {
 		this.otherSales = otherSales;
 		this.globalSales = globalSales;
 	}
-	
+
 	public Juego() {
 		super();
 	}
@@ -73,7 +91,7 @@ public class Juego {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -81,7 +99,7 @@ public class Juego {
 		return rank;
 	}
 
-	public void setRank(int rank) {
+	public void setRank(long rank) {
 		this.rank = rank;
 	}
 
@@ -105,7 +123,7 @@ public class Juego {
 		return year;
 	}
 
-	public void setYear(int year) {
+	public void setYear(long year) {
 		this.year = year;
 	}
 
@@ -164,13 +182,13 @@ public class Juego {
 	public void setGlobalSales(double globalSales) {
 		this.globalSales = globalSales;
 	}
-			
+
 	// toString
 	@Override
 	public String toString() {
-		return "Juego [id=" + id + ", rank=" + rank + ", name=" + name + ", year=" + year + ", publisher=" + publisher + ", platform="
-				+ platform + ", genre=" + genre + ", naSales=" + naSales + ", euSales=" + euSales + ", jpSales="
-				+ jpSales + ", otherSales=" + otherSales + ", globalSales=" + globalSales + "]";
+		return "Juego [id=" + id + ", rank=" + rank + ", name=" + name + ", year=" + year + ", publisher=" + publisher
+				+ ", platform=" + platform + ", genre=" + genre + ", naSales=" + naSales + ", euSales=" + euSales
+				+ ", jpSales=" + jpSales + ", otherSales=" + otherSales + ", globalSales=" + globalSales + "]";
 	}
-	
+
 }
