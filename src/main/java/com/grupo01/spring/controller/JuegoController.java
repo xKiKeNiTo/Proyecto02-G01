@@ -2,13 +2,11 @@ package com.grupo01.spring.controller;
 
 import java.util.List;
 
+import com.grupo01.spring.service.JuegoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.service.JuegoServiceImpl;
@@ -19,35 +17,25 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/juegos")
 public class JuegoController {
-    @Autowired
-    private JuegoService service;
-	/**
-	 * Lista todos los juegos.
-	 *
-	 * @param juegoExistente el juego con los datos actualizados
-	 * @return ResponseEntity con el juego editado
-	 */
-
-	private static final Logger log = LoggerFactory.getLogger(JuegoController.class);
-
-    @GetMapping
-    public ResponseEntity<RespuestaApi<List<Juego>>> findAll() {
-        List<Juego> juegos = service.findAll();
-        if(juegos.isEmpty()){
-            return ResponseEntity.status(204).body(
-                    new RespuestaApi<>("No se encontraron juegos",204,null)
-            );
-        }
-
-        return ResponseEntity.status(200).body(
-                new RespuestaApi<>("Lista de juegos encontrada",200,juegos)
-        );
-    }
 	@Autowired
 	private CSV csv; // Clase para manejar el CSV
 
 	@Autowired
 	private JuegoServiceImpl juegoService;
+
+	@GetMapping
+	public ResponseEntity<RespuestaApi<List<Juego>>> findAll() {
+		List<Juego> juegos = juegoService.findAll();
+		if(juegos.isEmpty()){
+			return ResponseEntity.status(204).body(
+					new RespuestaApi<>("No se encontraron juegos",204,null)
+			);
+		}
+
+		return ResponseEntity.status(200).body(
+				new RespuestaApi<>("Lista de juegos encontrada",200,juegos)
+		);
+	}
 
 	/**
 	 * Lee los datos del CSV y los guarda en la base de datos.

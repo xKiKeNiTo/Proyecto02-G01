@@ -41,4 +41,7 @@ public class JuegoServiceImpl implements JuegoService {
 		return juegoDao.save(juego);
 	}
 
+	public void deleteById(Integer id) {
+		juegoDao.deleteById(id);
+	}
 }

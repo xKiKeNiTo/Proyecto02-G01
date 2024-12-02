@@ -27,7 +27,7 @@ public class JuegoServiceTest {
     @Test
     public void testDevuelveJuegos() {
         List<Juego> juegos = new ArrayList<>();
-        for (int i = 0; i < 5; i++) { // Crear 250 registros simulados
+        for (int i = 0; i < 5; i++) { // Crear 5 registros simulados
             Juego juego = new Juego();
             juego.setRank(i + 1);
             juego.setName("Juego " + (i + 1));
@@ -66,5 +66,16 @@ public class JuegoServiceTest {
         // Verificar que el repositorio se llamó la cantidad correcta de veces
         int expectedBatchCalls = (int) Math.ceil(juegos.size() / 100.0);
         verify(juegoDao, times(expectedBatchCalls)).saveAll(anyList());
+    }
+
+    @Test
+    public void testEliminaJuego() {
+        Integer juegoId = 1; // ID del juego a eliminar
+
+        // Llamar al método del servicio
+        juegoServiceImpl.deleteById(juegoId);
+
+        // Verificar que el método deleteById se llamó con el ID correcto
+        verify(juegoDao, times(1)).deleteById(juegoId);
     }
 }

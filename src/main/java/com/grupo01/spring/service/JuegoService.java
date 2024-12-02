@@ -2,12 +2,9 @@ package com.grupo01.spring.service;
 import java.util.List;
 
 import com.grupo01.spring.model.Juego;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface JuegoService {
-
-    //Para listar todos los juegos
-    public List<Juego> findAll();
-    
+public interface JuegoService{
     /**
      * Guarda un juego en la base de datos.
      * 
