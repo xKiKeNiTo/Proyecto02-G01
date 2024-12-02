@@ -113,7 +113,7 @@ public class JuegoServiceTest {
 	@Test
 	public void modificaJuego() {
 		// Mockear el comportamiento del repositorio
-		when(juegoDao.existsById(1)).thenReturn(true);
+		when(juegoDao.existsById((long) 1)).thenReturn(true);
 		when(juegoDao.save(juegoExistente)).thenReturn(juegoExistente);
 
 		// Modificar el juego
@@ -132,7 +132,7 @@ public class JuegoServiceTest {
 	@Test
 	public void modificaInexistente() {
 		// Mockear el comportamiento del repositorio para ID inexistente
-		when(juegoDao.existsById(3)).thenReturn(false);
+		when(juegoDao.existsById((long) 3)).thenReturn(false);
 
 		// Verificar que se lanza la excepción al intentar modificar un juego
 		// inexistente

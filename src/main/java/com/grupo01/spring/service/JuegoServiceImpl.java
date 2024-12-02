@@ -39,14 +39,14 @@ public class JuegoServiceImpl implements JuegoService {
 
 	public Juego save(Juego juego) {
 		if (juego.getId() != 0) {
-			if (!juegoDao.existsById((int) juego.getId())) {
+			if (!juegoDao.existsById(juego.getId())) {
 				throw new RuntimeException("Juego con ID " + juego.getId() + " no encontrado para modificar.");
 			}
 		}
 		return juegoDao.save(juego);
 	}
 
-	public boolean deleteById(int id) {
+	public boolean deleteById(long id) {
 		if (juegoDao.existsById(id)) {
 			juegoDao.deleteById(id);
 			return true;

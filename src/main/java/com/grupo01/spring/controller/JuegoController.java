@@ -80,8 +80,8 @@ public class JuegoController {
 		return ResponseEntity.ok(juegoEditado);
 	}
 	
-    @DeleteMapping("/id")
-    public ResponseEntity<Juego> deleteById(@PathVariable int id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Juego> deleteById(@PathVariable long id) {
         boolean seHaBorrado = juegoService.deleteById(id); 
         if (seHaBorrado) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
