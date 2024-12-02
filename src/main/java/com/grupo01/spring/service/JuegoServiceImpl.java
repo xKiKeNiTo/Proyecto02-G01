@@ -48,6 +48,7 @@ public class JuegoServiceImpl implements JuegoService {
 		return juegoDao.save(juego);
 	}
 
+
 	@Override
 	public Juego deleteById(long id) {
 		Optional<Juego> juegoOptional = juegoDao.findById(id);
@@ -66,6 +67,10 @@ public class JuegoServiceImpl implements JuegoService {
 	
 	public List<Juego> listarPorSiglo() {
 		return juegoDao.listarPorSiglo();
+	}
+	
+	public List<Juego> listarPorConsola(String plataforma) {
+		return juegoDao.listarPorConsola(plataforma);
 	}
 
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -81,6 +82,7 @@ public class JuegoController {
 		return ResponseEntity.ok(juegoEditado);
 	}
 	
+
 	@GetMapping("/por-siglo")
 	public List<Juego> listarPorSiglo(){
 		return juegoService.listarPorSiglo();
@@ -107,5 +109,17 @@ public class JuegoController {
 		}
 		return ResponseEntity.ok(juegos);
 	}
+
+	
+    @GetMapping("/consola/{plataforma}")
+    public ResponseEntity<List<Juego>> listarPorConsola(@PathVariable String plataforma) {
+    	List<Juego> juegos = juegoService.listarPorConsola(plataforma);
+    	
+    	if (juegos == null || juegos.isEmpty()) {
+    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    	}
+    	return ResponseEntity.ok(juegos);
+    }
+
 
 }
