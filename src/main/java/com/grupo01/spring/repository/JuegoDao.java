@@ -1,15 +1,8 @@
 package com.grupo01.spring.repository;
 
-import java.util.List;
-
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
@@ -32,5 +25,6 @@ public interface JuegoDao extends JpaRepository<Juego, Long>{
 	@Query("FROM Juego WHERE platform = :consola")
 	List<Juego> listarPorConsola(@Param("consola") String consola);
 
-	
+	@Query("FROM Juego WHERE year =?1")
+    List<Juego> findByYear(long year);
 }

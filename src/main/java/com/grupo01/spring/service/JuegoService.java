@@ -9,11 +9,12 @@ public interface JuegoService {
     //Para listar todos los juegos
     public List<Juego> findAll();
     
+public interface JuegoService{
     /**
      * Guarda un juego en la base de datos.
      * 
      * @param juego El objeto Juego a guardar.
-     * @return El objeto guardado (incluyendo el ID generado).
+     * @return El objeto guardado (incluyendo el ID generado).x
      */
     public Juego save(Juego juego);
     
@@ -39,5 +40,7 @@ public interface JuegoService {
      */
     public List<Juego> listarPorConsola(String plataforma);
 
+
+    public List<Juego> findByYear(long year);
     
 }

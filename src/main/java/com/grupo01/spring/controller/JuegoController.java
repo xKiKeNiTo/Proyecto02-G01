@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -121,5 +120,13 @@ public class JuegoController {
     	return ResponseEntity.ok(juegos);
     }
 
+	@GetMapping("/{year}")
+	public ResponseEntity<RespuestaApi<List<Juego>>> findByYear(@PathVariable long year) {
+		List<Juego> juegos = juegoService.findByYear(year);
+		if (juegos.isEmpty()) {
+			return ResponseEntity.status(204).body(new RespuestaApi<>("No se encontraron juegos para ese año", 204, null));
+		}
 
+		return ResponseEntity.status(200).body(new RespuestaApi<>("Lista de juegos encontrada", 200, juegos));
+	}
 }

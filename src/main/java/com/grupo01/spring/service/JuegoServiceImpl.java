@@ -72,5 +72,8 @@ public class JuegoServiceImpl implements JuegoService {
 	public List<Juego> listarPorConsola(String plataforma) {
 		return juegoDao.listarPorConsola(plataforma);
 	}
-
+	@Override
+	public List<Juego> findByYear(long year) {
+		return juegoDao.findByYear(year);
+	}
 }
