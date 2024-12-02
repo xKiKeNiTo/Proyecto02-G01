@@ -30,7 +30,6 @@ public class JuegoController {
 
 	private static final Logger log = LoggerFactory.getLogger(JuegoController.class);
 
-    //Listar juegos
     @GetMapping
     public ResponseEntity<RespuestaApi<List<Juego>>> findAll() {
         List<Juego> juegos = service.findAll();

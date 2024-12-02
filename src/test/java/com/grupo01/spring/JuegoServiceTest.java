@@ -25,6 +25,30 @@ public class JuegoServiceTest {
     private JuegoServiceImpl juegoServiceImpl;
 
     @Test
+    public void testDevuelveJuegos() {
+        List<Juego> juegos = new ArrayList<>();
+        for (int i = 0; i < 5; i++) { // Crear 250 registros simulados
+            Juego juego = new Juego();
+            juego.setRank(i + 1);
+            juego.setName("Juego " + (i + 1));
+            juegos.add(juego);
+        }
+
+        // Configurar el mock para que devuelva la lista simulada cuando se llame a findAll
+        when(juegoDao.findAll()).thenReturn(juegos);
+
+        //Llamo al metodo del servicio
+        List<Juego> resultado = juegoServiceImpl.findAll();
+
+        //Verificar resultados
+        assertEquals(juegos.size(), resultado.size(), "La cantidad de juegos devuelta no coincide");
+        assertEquals("Juego 1", resultado.getFirst().getName(), "El primer juego no coincide");
+
+        // Verificar que el repositorio se llamó la cantidad correcta de veces
+        int expectedBatchCalls = (int) Math.ceil(juegos.size() / 100.0);
+        verify(juegoDao, times(expectedBatchCalls)).saveAll(anyList());
+    }
+    @Test
     public void testSaveCsv() {
         List<Juego> juegos = new ArrayList<>();
         for (int i = 0; i < 250; i++) { // Crear 250 registros simulados

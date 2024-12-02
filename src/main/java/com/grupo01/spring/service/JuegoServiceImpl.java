@@ -14,7 +14,7 @@ public class JuegoServiceImpl implements JuegoService {
 	@Autowired
 	private JuegoDao juegoDao;
 
-	@Override
+	//Para listar todos los juegos
 	public List<Juego> findAll() {
 		return juegoDao.findAll();
 	}
