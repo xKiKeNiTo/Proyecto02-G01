@@ -41,12 +41,16 @@ public class JuegoServiceImpl implements JuegoService {
 		return juegoDao.save(juego);
 	}
 
-	public boolean deleteById(int id) {
+	public boolean deleteById(long id) {
 		if (juegoDao.existsById(id)) {
 			juegoDao.deleteById(id);
 			return true;
 		}
 		return false;
+	}
+	
+	public List<Juego> listarPorConsola(String plataforma) {
+		return juegoDao.listarPorConsola(plataforma);
 	}
 
 }
