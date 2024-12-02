@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,18 +50,28 @@ public class JuegoController {
 		}
 	}
 
+	@GetMapping
+	public ResponseEntity<RespuestaApi<List<Juego>>> findAll() {
+		List<Juego> juegos = juegoService.findAll();
+		if (juegos.isEmpty()) {
+			return ResponseEntity.status(204).body(new RespuestaApi<>("No se encontraron juegos", 204, null));
+		}
+
+		return ResponseEntity.status(200).body(new RespuestaApi<>("Lista de juegos encontrada", 200, juegos));
+	}
+
 	@PostMapping
 	public ResponseEntity<Juego> saveJuego(@RequestBody @Valid Juego nuevoJuego) {
 		Juego juegoGuardado = juegoService.save(nuevoJuego);
 		return ResponseEntity.ok(juegoGuardado);
 	}
-	
+
 	/**
 	 * Edita un juego existente.
 	 *
 	 * @param juegoExistente el juego con los datos actualizados
 	 * @return ResponseEntity con el juego editado
-	 */	
+	 */
 	@PostMapping("/edit")
 	public ResponseEntity<Juego> editJuego(@RequestBody @Valid Juego juegoExistente) {
 		Juego juegoEditado = juegoService.save(juegoExistente);
