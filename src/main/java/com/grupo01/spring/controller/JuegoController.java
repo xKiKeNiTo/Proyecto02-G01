@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,9 +66,19 @@ public class JuegoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Juego> saveJuego(@RequestBody @Valid Juego nuevoJuego) {
-		Juego juegoGuardado = juegoService.save(nuevoJuego);
-		return ResponseEntity.ok(juegoGuardado);
+	public ResponseEntity<?> saveJuego(@RequestBody @Valid Juego nuevoJuego) {
+		try {
+			Juego juegoGuardado = juegoService.save(nuevoJuego);
+			return ResponseEntity.ok(juegoGuardado);
+		} catch (IllegalArgumentException e) {
+			// Manejo específico para valores inválidos del Enum
+			return ResponseEntity.badRequest().body("Error: Valor inválido para plataforma o género.");
+
+		} catch (Exception e) {
+			// Manejo general de otras excepciones
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error: Ocurrió un problema al guardar el juego.");
+		}
 	}
 
 	/**
@@ -81,12 +92,11 @@ public class JuegoController {
 		Juego juegoEditado = juegoService.save(juegoExistente);
 		return ResponseEntity.ok(juegoEditado);
 	}
-	
 
 	@GetMapping("/por-siglo")
-	public List<Juego> listarPorSiglo(){
+	public List<Juego> listarPorSiglo() {
 		return juegoService.listarPorSiglo();
-		
+
 	}
 
 	@DeleteMapping("/{id}")
@@ -110,16 +120,14 @@ public class JuegoController {
 		return ResponseEntity.ok(juegos);
 	}
 
-	
-    @GetMapping("/consola/{plataforma}")
-    public ResponseEntity<List<Juego>> listarPorConsola(@PathVariable String plataforma) {
-    	List<Juego> juegos = juegoService.listarPorConsola(plataforma);
-    	
-    	if (juegos == null || juegos.isEmpty()) {
-    		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    	}
-    	return ResponseEntity.ok(juegos);
-    }
+	@GetMapping("/consola/{plataforma}")
+	public ResponseEntity<List<Juego>> listarPorConsola(@PathVariable String plataforma) {
+		List<Juego> juegos = juegoService.listarPorConsola(plataforma);
 
+		if (juegos == null || juegos.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return ResponseEntity.ok(juegos);
+	}
 
 }
