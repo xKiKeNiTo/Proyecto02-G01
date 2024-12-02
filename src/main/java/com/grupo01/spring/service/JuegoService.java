@@ -16,6 +16,6 @@ public interface JuegoService {
      */
     public Juego save(Juego juego);
     
-    public boolean deleteById(long id);
+    public Juego deleteById(long id);
     
 }

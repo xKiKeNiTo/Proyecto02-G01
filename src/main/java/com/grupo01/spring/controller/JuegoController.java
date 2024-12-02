@@ -79,16 +79,16 @@ public class JuegoController {
 		Juego juegoEditado = juegoService.save(juegoExistente);
 		return ResponseEntity.ok(juegoEditado);
 	}
-	
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Juego> deleteById(@PathVariable long id) {
-        boolean seHaBorrado = juegoService.deleteById(id); 
-        if (seHaBorrado) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); 
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
-        }
-    }
-	
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<RespuestaApi<Juego>> deleteById(@PathVariable long id) {
+		Juego juegoEliminado = juegoService.deleteById(id);
+		if (juegoEliminado != null) {
+			return ResponseEntity.status(200)
+					.body(new RespuestaApi<>("El juego ha sido eliminado con éxito.", 200, juegoEliminado));
+		} else {
+			return ResponseEntity.status(404).body(new RespuestaApi<>("El juego no existe.", 404, null));
+		}
+	}
 
 }

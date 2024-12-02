@@ -1,6 +1,7 @@
 package com.grupo01.spring.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class JuegoServiceImpl implements JuegoService {
 	@Autowired
 	private JuegoDao juegoDao;
 
-	//Para listar todos los juegos
+	// Para listar todos los juegos
 	public List<Juego> findAll() {
 		return juegoDao.findAll();
 	}
@@ -46,12 +47,16 @@ public class JuegoServiceImpl implements JuegoService {
 		return juegoDao.save(juego);
 	}
 
-	public boolean deleteById(long id) {
-		if (juegoDao.existsById(id)) {
-			juegoDao.deleteById(id);
-			return true;
+	@Override
+	public Juego deleteById(long id) {
+		Optional<Juego> juegoOptional = juegoDao.findById(id);
+		if (juegoOptional.isPresent()) {
+			Juego juegoEliminado = juegoOptional.get();
+			juegoDao.delete(juegoEliminado);
+			return juegoEliminado;
+		} else {
+			return null;
 		}
-		return false;
 	}
 
 }
