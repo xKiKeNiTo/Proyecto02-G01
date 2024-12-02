@@ -112,6 +112,8 @@ public class JuegoControllerTest {
 	    // Comprueba que el método save fue llamado una vez con los datos actualizados
 	    verify(juegoService, times(1)).save(any(Juego.class));
 	}
+	
+	
 		
 	
 }
