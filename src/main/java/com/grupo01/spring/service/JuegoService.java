@@ -20,5 +20,7 @@ public interface JuegoService {
     public Juego deleteById(long id);
     
     List<Juego> findByGenre(Genre genre);
+    // Custom para listar por siglo
+    public List<Juego> listarPorSiglo();
     
 }

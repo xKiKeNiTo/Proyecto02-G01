@@ -63,5 +63,9 @@ public class JuegoServiceImpl implements JuegoService {
 	public List<Juego> findByGenre(Genre genre) {
 		return juegoDao.findByGenre(genre);
 	}
+	
+	public List<Juego> listarPorSiglo() {
+		return juegoDao.listarPorSiglo();
+	}
 
 }

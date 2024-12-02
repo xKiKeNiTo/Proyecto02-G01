@@ -80,6 +80,12 @@ public class JuegoController {
 		Juego juegoEditado = juegoService.save(juegoExistente);
 		return ResponseEntity.ok(juegoEditado);
 	}
+	
+	@GetMapping("/por-siglo")
+	public List<Juego> listarPorSiglo(){
+		return juegoService.listarPorSiglo();
+		
+	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<RespuestaApi<Juego>> deleteById(@PathVariable long id) {
