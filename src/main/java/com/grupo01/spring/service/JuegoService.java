@@ -1,44 +1,65 @@
 package com.grupo01.spring.service;
+
 import java.util.List;
 
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.model.Platform;
 
+/**
+ * Interfaz para la gestión de juegos.
+ *
+ * Define las operaciones CRUD y consultas personalizadas para la entidad Juego.
+ *
+ * @version 1.0
+ * @author Equipo
+ * @date 03/12/2024
+ */
 public interface JuegoService {
-	
-    //Para listar todos los juegos
-    public List<Juego> findAll();
-    
-    /**
-     * Guarda un juego en la base de datos.
-     * 
-     * @param juego El objeto Juego a guardar.
-     * @return El objeto guardado (incluyendo el ID generado).
-     */
-    public Juego save(Juego juego);
-    
 
-    
-    List<Juego> findByGenre(Genre genre);
-    // Custom para listar por siglo
-    public List<Juego> listarPorSiglo();
+	/**
+	 * Recupera todos los juegos almacenados en la base de datos.
+	 *
+	 * @return Lista de todos los juegos.
+	 */
+	List<Juego> findAll();
 
-    /**
-     * Elimina un juego de la base datos pasado su identificador
-     * 
-     * @param id el identificador del juego a borrar
-     * @return boolean true si se ha eliminado correctamente, false si no
-     */
-    public Juego deleteById(long id);
-    
-    /**
-     * Lista todos los juegos que se publicaron en una plataforma
-     * 
-     * @param plataforma, El nombre de la plataforma de la que queremos obtener el listado
-     * @return Lista con los los juegos
-     */
-    public List<Juego> listarPorConsola(Platform plataforma);
+	/**
+	 * Guarda un juego en la base de datos.
+	 *
+	 * @param juego El objeto Juego a guardar.
+	 * @return El objeto guardado (incluyendo el ID generado).
+	 */
+	Juego save(Juego juego);
 
-    
+	/**
+	 * Recupera una lista de juegos que pertenecen al género especificado.
+	 *
+	 * @param genre El género de los juegos a buscar.
+	 * @return Lista de juegos del género especificado.
+	 */
+	List<Juego> findByGenre(Genre genre);
+
+	/**
+	 * Recupera todos los juegos publicados en el siglo XX.
+	 *
+	 * @return Lista de juegos publicados antes del año 2001.
+	 */
+	List<Juego> listarPorSiglo();
+
+	/**
+	 * Elimina un juego de la base datos dado su identificador.
+	 *
+	 * @param id El identificador del juego a borrar.
+	 * @return El juego eliminado.
+	 */
+	Juego deleteById(long id);
+
+	/**
+	 * Recupera una lista de juegos publicados en una plataforma específica.
+	 *
+	 * @param plataforma La plataforma de la que queremos obtener el listado.
+	 * @return Lista de juegos publicados en la plataforma especificada.
+	 */
+	List<Juego> listarPorConsola(Platform plataforma);
 }

@@ -1,13 +1,18 @@
 package com.grupo01.spring.model;
 
-/**
- * Enum Genre 
- * @version 1
- * @author raul_
- * 29/11/2024
- */
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public enum Genre{
+/**
+ * Enumeración para representar los géneros de los juegos.
+ * 
+ * Proporciona una lista predefinida de géneros y métodos para trabajar con ellos.
+ *
+ * @version 1.0
+ * @author Raul
+ * @date 29/11/2024
+ */
+public enum Genre {
     Action,
     Adventure,
     Fighting,
@@ -20,16 +25,25 @@ public enum Genre{
     Simulation,
     Sports,
     Strategy;
-	
-	//Método para mapear los valores del CSV al Enum Genre
-	public static Genre fromString(String genreText) {
-	    switch (genreText) {
-	        case "Role-Playing":
-	            return Role_Playing;
-	        default:
-	            return Genre.valueOf(genreText); // Si coincide exactamente, usar el valor del Enum
-	    }
-	}
-};
 
+    private static final Logger logger = LoggerFactory.getLogger(Genre.class);
 
+    /**
+     * Método para mapear los valores del CSV al Enum Genre.
+     *
+     * @param genreText El texto del género a mapear.
+     * @return El valor del Enum correspondiente.
+     * @throws IllegalArgumentException Si el texto no coincide con ningún valor del Enum.
+     */
+    public static Genre fromString(String genreText) {
+        try {
+            if ("Role-Playing".equalsIgnoreCase(genreText)) {
+                return Role_Playing;
+            }
+            return Genre.valueOf(genreText.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            logger.error("El valor '{}' no es un género válido", genreText, e);
+            throw e;
+        }
+    }
+}

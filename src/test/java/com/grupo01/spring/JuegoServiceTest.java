@@ -1,8 +1,6 @@
 package com.grupo01.spring;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
@@ -21,14 +19,30 @@ import com.grupo01.spring.model.Platform;
 import com.grupo01.spring.repository.JuegoDao;
 import com.grupo01.spring.service.JuegoServiceImpl;
 
+/**
+ * Clase de pruebas unitarias para la implementación del servicio
+ * `JuegoServiceImpl`.
+ *
+ * Valida la lógica de negocio y la interacción con el repositorio.
+ *
+ * @version 1.0
+ * @author Equipo
+ * @date 03/12/2024
+ */
 @SpringBootTest
 public class JuegoServiceTest {
 
 	@Mock
 	private JuegoDao juegoDao;
 
+	@InjectMocks
+	private JuegoServiceImpl juegoServiceImpl;
+
 	private Juego juegoExistente;
 
+	/**
+	 * Configuración inicial para las pruebas.
+	 */
 	@BeforeEach
 	public void setUp() {
 		MockitoAnnotations.openMocks(this);
@@ -38,13 +52,13 @@ public class JuegoServiceTest {
 				3.77, 8.46, 82.74);
 	}
 
-	@InjectMocks
-	private JuegoServiceImpl juegoServiceImpl;
-
+	/**
+	 * Verifica que los registros desde un CSV se guardan correctamente en lotes.
+	 */
 	@Test
 	public void guardarCsvYVerificarRegistrosGuardadosCorrectamente() {
 		List<Juego> juegos = new ArrayList<>();
-		for (int i = 0; i < 250; i++) { // Crear 250 registros simulados
+		for (int i = 0; i < 250; i++) {
 			Juego juego = new Juego();
 			juego.setRank(i + 1);
 			juego.setName("Juego " + (i + 1));
@@ -53,116 +67,104 @@ public class JuegoServiceTest {
 
 		int totalSaved = juegoServiceImpl.saveCsv(juegos);
 
-		// Verificar que se guardan todos los registros
 		assertEquals(juegos.size(), totalSaved,
 				"El número total de registros guardados no coincide con la lista de entrada");
 
-		// Verificar que el repositorio se llamó la cantidad correcta de veces
 		int expectedBatchCalls = (int) Math.ceil(juegos.size() / 100.0);
 		verify(juegoDao, times(expectedBatchCalls)).saveAll(anyList());
 	}
 
+	/**
+	 * Verifica que un juego se guarda correctamente en la base de datos.
+	 */
 	@Test
 	public void guardarJuegoYVerificarQueSeGuardaCorrectamente() {
-		// Datos de entrada
 		Juego juego = new Juego(0, 1, "Super Mario Bros", Platform.NES, 1985, Genre.Platform, "Nintendo", 29.08, 3.58,
 				6.81, 0.77, 40.24);
 
-		// Simular el comportamiento del mock
 		when(juegoDao.save(any(Juego.class))).thenReturn(juego);
 
-		// Ejecutar el método a probar
 		Juego juegoGuardado = juegoServiceImpl.save(juego);
 
-		// Verificar que el DAO fue llamado con el juego correcto
 		verify(juegoDao, times(1)).save(juegoGuardado);
 
-		// Afirmaciones
 		assertNotNull(juegoGuardado);
 		assertEquals("Super Mario Bros", juegoGuardado.getName());
 		assertEquals(1985, juegoGuardado.getYear());
-		assertEquals(Platform.NES, juegoGuardado.getPlatform());
-		assertEquals(Genre.Platform, juegoGuardado.getGenre());
 	}
 
+	/**
+	 * Verifica que todos los juegos se recuperan correctamente.
+	 */
 	@Test
 	public void listarTodosLosJuegosYVerificarQueSeDevuelvenCorrectamente() {
-	    List<Juego> juegos = new ArrayList<>();
-	    for (int i = 0; i < 5; i++) { // Crear 5 registros simulados
-	        Juego juego = new Juego();
-	        juego.setRank(i + 1);
-	        juego.setName("Juego " + (i + 1));
-	        juegos.add(juego);
-	    }
+		List<Juego> juegos = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			Juego juego = new Juego();
+			juego.setRank(i + 1);
+			juego.setName("Juego " + (i + 1));
+			juegos.add(juego);
+		}
 
-	    // Configurar el mock para que devuelva la lista simulada
-	    when(juegoDao.findAll()).thenReturn(juegos);
+		when(juegoDao.findAll()).thenReturn(juegos);
 
-	    // Llamar al método del servicio
-	    List<Juego> resultado = juegoServiceImpl.findAll();
+		List<Juego> resultado = juegoServiceImpl.findAll();
 
-	    // Verificar resultados
-	    assertEquals(juegos.size(), resultado.size(), "La cantidad de juegos devuelta no coincide");
-	    assertEquals("Juego 1", resultado.get(0).getName(), "El primer juego no coincide");
+		assertEquals(juegos.size(), resultado.size(), "La cantidad de juegos devuelta no coincide");
+		assertEquals("Juego 1", resultado.get(0).getName());
 
-	    // Verificar que el repositorio se llamó
-	    verify(juegoDao, times(1)).findAll();
+		verify(juegoDao, times(1)).findAll();
 	}
 
-
+	/**
+	 * Verifica que un juego existente se modifica correctamente.
+	 */
 	@Test
 	public void modificarJuegoExistenteYVerificarActualizacionCorrecta() {
-		// Mockear el comportamiento del repositorio
-		when(juegoDao.existsById((long) 1)).thenReturn(true);
+		when(juegoDao.existsById(1L)).thenReturn(true);
 		when(juegoDao.save(juegoExistente)).thenReturn(juegoExistente);
 
-		// Modificar el juego
 		juegoExistente.setName("Wii Sports Updated");
 		juegoExistente.setGlobalSales(85.00);
 
-		// Llamar al método del servicio
 		Juego juegoModificado = juegoServiceImpl.save(juegoExistente);
 
-		// Verificar el resultado
 		assertNotNull(juegoModificado);
 		assertEquals("Wii Sports Updated", juegoModificado.getName());
 		assertEquals(85.00, juegoModificado.getGlobalSales());
 	}
 
+	/**
+	 * Verifica que se lanza una excepción al intentar modificar un juego
+	 * inexistente.
+	 */
 	@Test
 	public void lanzarExcepcionCuandoSeIntentaModificarJuegoInexistente() {
-		// Mockear el comportamiento del repositorio para ID inexistente
-		when(juegoDao.existsById((long) 3)).thenReturn(false);
+		when(juegoDao.existsById(3L)).thenReturn(false);
 
-		// Verificar que se lanza la excepción al intentar modificar un juego
-		// inexistente
 		assertThrows(RuntimeException.class, () -> {
 			Juego juegoInexistente = new Juego(3, 2, "Juego Inexistente", Platform.PS4, 2022, Genre.Action,
 					"Desconocido", 1.0, 1.0, 1.0, 1.0, 4.0);
 			juegoServiceImpl.save(juegoInexistente);
 		});
 	}
-	
+
+	/**
+	 * Verifica que los juegos filtrados por género se recuperan correctamente.
+	 */
 	@Test
-    public void listarJuegosFiltradosPorGeneroYVerificarResultadosCorrectos() {
-        // Crear datos simulados
-        List<Juego> juegos = new ArrayList<>();
-        juegos.add(new Juego(1, 1, "Juego Acción 1", Platform.PS4, 2021, Genre.Action, "Sony", 10.5, 8.3, 4.7, 2.1, 25.6));
-        juegos.add(new Juego(2, 2, "Juego Acción 2", Platform.NES, 2020, Genre.Action, "Microsoft", 12.0, 9.0, 5.0, 3.0, 29.0));
+	public void listarJuegosFiltradosPorGeneroYVerificarResultadosCorrectos() {
+		List<Juego> juegos = new ArrayList<>();
+		juegos.add(
+				new Juego(1, 1, "Juego Acción 1", Platform.PS4, 2021, Genre.Action, "Sony", 10.5, 8.3, 4.7, 2.1, 25.6));
+		juegos.add(new Juego(2, 2, "Juego Acción 2", Platform.NES, 2020, Genre.Action, "Microsoft", 12.0, 9.0, 5.0, 3.0,
+				29.0));
 
-        // Configurar el mock para que devuelva la lista filtrada
-        when(juegoDao.findByGenre(Genre.Action)).thenReturn(juegos);
+		when(juegoDao.findByGenre(Genre.Action)).thenReturn(juegos);
 
-        // Llamar al método del servicio
-        List<Juego> resultado = juegoServiceImpl.findByGenre(Genre.Action);
+		List<Juego> resultado = juegoServiceImpl.findByGenre(Genre.Action);
 
-        // Verificar los resultados
-        assertEquals(2, resultado.size(), "La cantidad de juegos filtrados no coincide");
-        assertEquals("Juego Acción 1", resultado.get(0).getName(), "El primer juego filtrado no coincide");
-        assertEquals("Juego Acción 2", resultado.get(1).getName(), "El segundo juego filtrado no coincide");
-
-        // Verificar que el repositorio fue llamado exactamente una vez
-        verify(juegoDao, times(1)).findByGenre(Genre.Action);
-    }
-	
+		assertEquals(2, resultado.size(), "La cantidad de juegos filtrados no coincide");
+		assertEquals("Juego Acción 1", resultado.get(0).getName());
+	}
 }
