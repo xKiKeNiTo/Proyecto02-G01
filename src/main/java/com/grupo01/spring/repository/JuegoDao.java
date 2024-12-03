@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
+import com.grupo01.spring.model.Platform;
 
 public interface JuegoDao extends JpaRepository<Juego, Long> {
 
@@ -30,6 +31,6 @@ public interface JuegoDao extends JpaRepository<Juego, Long> {
 	 *                  con el argumento del metodo
 	 */
 	@Query("FROM Juego WHERE platform = :consola")
-	List<Juego> listarPorConsola(@Param("consola") String consola);
+	List<Juego> listarPorConsola(@Param("consola") Platform plataforma);
 
 }

@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +17,7 @@ import com.grupo01.spring.controller.error.CustomException;
 import com.grupo01.spring.controller.error.GlobalExceptionHandler;
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
+import com.grupo01.spring.model.Platform;
 import com.grupo01.spring.service.JuegoServiceImpl;
 import com.grupo01.spring.utils.CSV;
 
@@ -130,7 +129,7 @@ public class JuegoController {
 	}
 
 	@GetMapping("/consola/{plataforma}")
-	public ResponseEntity<List<Juego>> listarPorConsola(@PathVariable String plataforma) {
+	public ResponseEntity<List<Juego>> listarPorConsola(@PathVariable Platform plataforma) {
 		List<Juego> juegos = juegoService.listarPorConsola(plataforma);
 
 		if (juegos == null || juegos.isEmpty()) {
