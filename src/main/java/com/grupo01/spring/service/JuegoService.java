@@ -5,11 +5,6 @@ import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.model.Platform;
 
-public interface JuegoService {
-	
-    //Para listar todos los juegos
-    public List<Juego> findAll();
-    
 public interface JuegoService{
     /**
      * Guarda un juego en la base de datos.
@@ -19,7 +14,11 @@ public interface JuegoService{
      */
     public Juego save(Juego juego);
     
-
+    /**
+     * Lista todos los juegos
+     * @return
+     */
+    public List<Juego> findAll();
     
     List<Juego> findByGenre(Genre genre);
     // Custom para listar por siglo

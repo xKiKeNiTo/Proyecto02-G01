@@ -18,6 +18,7 @@ public class JuegoServiceImpl implements JuegoService {
 	private JuegoDao juegoDao;
 
 	// Para listar todos los juegos
+    @Override
 	public List<Juego> findAll() {
 		return juegoDao.findAll();
 	}
@@ -40,6 +41,7 @@ public class JuegoServiceImpl implements JuegoService {
 		return totalSaved; // Retornar el total de registros guardados
 	}
 
+    @Override
 	public Juego save(Juego juego) {
 		if (juego.getId() != 0) {
 			if (!juegoDao.existsById(juego.getId())) {
@@ -62,10 +64,12 @@ public class JuegoServiceImpl implements JuegoService {
 		}
 	}
 
+    @Override
 	public List<Juego> findByGenre(Genre genre) {
 		return juegoDao.findByGenre(genre);
 	}
 	
+    @Override
 	public List<Juego> listarPorSiglo() {
 		return juegoDao.listarPorSiglo();
 	}
