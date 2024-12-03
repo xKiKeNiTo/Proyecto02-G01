@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.grupo01.spring.controller.error.CustomException;
+import com.grupo01.spring.controller.error.GlobalExceptionHandler;
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.service.JuegoServiceImpl;
@@ -72,12 +74,19 @@ public class JuegoController {
 			return ResponseEntity.ok(juegoGuardado);
 		} catch (IllegalArgumentException e) {
 			// Manejo específico para valores inválidos del Enum
-			return ResponseEntity.badRequest().body("Error: Valor inválido para plataforma o género.");
+			CustomException ce = new CustomException("Error: Valor inválido para plataforma o género", 204);
+			GlobalExceptionHandler geh = new GlobalExceptionHandler();
+			//Antiguo return:
+			//return ResponseEntity.badRequest().body("Error: Valor inválido para plataforma o género");
+			return geh.handleCustomException(ce);
 
 		} catch (Exception e) {
 			// Manejo general de otras excepciones
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body("Error: Ocurrió un problema al guardar el juego.");
+			CustomException ce = new CustomException("Error: Ocurrió un problema al guardar el juego", 204);
+			GlobalExceptionHandler geh = new GlobalExceptionHandler();
+			return geh.handleCustomException(ce);
+			//Antiguo return:
+			//return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: Ocurrió un problema al guardar el juego.");
 		}
 	}
 
