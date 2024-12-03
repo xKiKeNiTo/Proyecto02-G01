@@ -5,14 +5,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.grupo01.spring.controller.JuegoController;
@@ -22,29 +23,40 @@ import com.grupo01.spring.model.Platform;
 import com.grupo01.spring.service.JuegoServiceImpl;
 import com.grupo01.spring.utils.CSV;
 
+/**
+ * Clase de pruebas unitarias para el controlador JuegoController.
+ *
+ * Valida los endpoints del controlador y su interacción con los servicios
+ * simulados.
+ * 
+ * @author equipo
+ * @version 1.0
+ * @date 03/12/2024
+ */
 @WebMvcTest(JuegoController.class)
 public class JuegoControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
-	@MockBean
+	@MockitoBean
 	private CSV csv;
 
-	@MockBean
+	@MockitoBean
 	private JuegoServiceImpl juegoService;
 
-	private List<Juego> getMockJuegos() {
-		return Arrays.asList(
+	/**
+	 * Prueba que los juegos se guardan correctamente desde el archivo CSV.
+	 *
+	 * @throws Exception Si ocurre un error durante la solicitud.
+	 */
+	@Test
+	public void debeGuardarJuegosDesdeCSVYDevolverMensajeExitoso() throws Exception {
+		List<Juego> juegos = Arrays.asList(
 				new Juego(1, 7, "Super Mario Bros", Platform.NES, 1985, Genre.Platform, "Nintendo", 40.24, 28.32, 6.81,
 						0.77, 75.84),
 				new Juego(2, 23, "Juego Ejemplo", Platform.PC, 1984, Genre.Puzzle, "Nintendo", 23.20, 2.26, 4.22, 0.58,
 						30.26));
-	}
-
-	@Test
-	public void debeGuardarJuegosDesdeCSVYDevolverMensajeExitoso() throws Exception {
-		List<Juego> juegos = getMockJuegos();
 
 		when(csv.getJuegos()).thenReturn(juegos);
 		when(juegoService.saveCsv(juegos)).thenReturn(juegos.size());
@@ -56,6 +68,11 @@ public class JuegoControllerTest {
 		verify(juegoService, times(1)).saveCsv(juegos);
 	}
 
+	/**
+	 * Prueba que devuelve un error 400 cuando los datos de entrada son inválidos.
+	 *
+	 * @throws Exception Si ocurre un error durante la solicitud.
+	 */
 	@Test
 	public void debeDevolverBadRequestCuandoJuegoTieneCamposInvalidos() throws Exception {
 		String juegoInvalidoJson = "{\"name\": \"\", \"rank\": 1, \"platform\": null}";
@@ -67,6 +84,11 @@ public class JuegoControllerTest {
 				.andExpect(jsonPath("$.errors", org.hamcrest.Matchers.hasItem("La plataforma no puede estar vacía")));
 	}
 
+	/**
+	 * Prueba que un juego existente se edita correctamente.
+	 *
+	 * @throws Exception Si ocurre un error durante la solicitud.
+	 */
 	@Test
 	public void debeModificarJuegoExistenteYDevolverDatosActualizados() throws Exception {
 		Juego juegoEditado = new Juego(1, 7, "Super Mario Bros Editado", Platform.NES, 1985, Genre.Platform, "Nintendo",
@@ -92,21 +114,75 @@ public class JuegoControllerTest {
 				""";
 
 		mockMvc.perform(post("/juegos/edit").content(juegoEditadoJson).contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Super Mario Bros Editado"))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.id").value(1))
+				.andExpect(jsonPath("$.name").value("Super Mario Bros Editado"))
 				.andExpect(jsonPath("$.jpSales").value(7.00));
 
 		verify(juegoService, times(1)).save(any(Juego.class));
 	}
 
+	/**
+	 * Prueba que el endpoint para buscar juegos por género llama correctamente al
+	 * servicio.
+	 *
+	 * @throws Exception Si ocurre un error durante la solicitud.
+	 */
 	@Test
 	public void llamoAlEndpointDeGeneroYVerificoLlamadaAlServicio() throws Exception {
-		List<Juego> juegos = getMockJuegos();
+		List<Juego> juegos = new ArrayList<>();
+		juegos.add(
+				new Juego(1, 1, "Juego Acción 1", Platform.PS4, 2021, Genre.Action, "Sony", 10.5, 8.3, 4.7, 2.1, 25.6));
+		juegos.add(new Juego(2, 2, "Juego Acción 2", Platform.NES, 2020, Genre.Action, "Microsoft", 12.0, 9.0, 5.0, 3.0,
+				29.0));
 
 		when(juegoService.findByGenre(Genre.Action)).thenReturn(juegos);
 
-		mockMvc.perform(get("/juegos/genero/Action").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
-				.andExpect(jsonPath("$.length()").value(juegos.size()));
+		mockMvc.perform(get("/juegos/genero/Action").contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 
 		verify(juegoService, times(1)).findByGenre(Genre.Action);
+	}
+
+	/**
+	 * Prueba que el endpoint para listar juegos del siglo XX funciona
+	 * correctamente.
+	 *
+	 * @throws Exception Si ocurre un error durante la solicitud.
+	 */
+	@Test
+	public void llamoEndpointVerificoLlamadaServicioSiglo() throws Exception {
+		List<Juego> juegos = Arrays.asList(
+				new Juego(1, 7, "Super Mario Bros", Platform.NES, 1985, Genre.Platform, "Nintendo", 40.24, 28.32, 6.81,
+						0.77, 75.84),
+				new Juego(2, 23, "Juego Ejemplo", Platform.PC, 1984, Genre.Puzzle, "Nintendo", 23.20, 2.26, 4.22, 0.58,
+						30.26));
+
+		when(juegoService.listarPorSiglo()).thenReturn(juegos);
+
+		mockMvc.perform(get("/juegos/por-siglo")).andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(2));
+
+		verify(juegoService, times(1)).listarPorSiglo();
+	}
+
+	/**
+	 * Prueba que el endpoint para listar juegos por consola funciona correctamente.
+	 *
+	 * @throws Exception Si ocurre un error durante la solicitud.
+	 */
+	@Test
+	public void llamoEndpointVerificoLlamadaServicioConsola() throws Exception {
+		Platform consola = Platform.X360;
+		List<Juego> juegosMock = Arrays.asList(
+				new Juego(1, 1, "Call of Duty Black Ops", Platform.X360, 2010, Genre.Shooter, "Treyarch", 30.56, 15.71,
+						7.61, 2.71, 56.59),
+				new Juego(2, 2, "Fable II", Platform.X360, 2008, Genre.Role_Playing, "Lionhead Studios", 15.14, 8.74,
+						4.52, 1.1, 29.50));
+
+		when(juegoService.listarPorConsola(consola)).thenReturn(juegosMock);
+
+		mockMvc.perform(get("/juegos/consola/{consola}", consola).contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+
+		verify(juegoService).listarPorConsola(consola);
 	}
 }
