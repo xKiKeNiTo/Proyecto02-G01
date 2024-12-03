@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.grupo01.spring.controller.error.CustomException;
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.model.Platform;
@@ -70,8 +71,10 @@ public class JuegoServiceImpl implements JuegoService {
 	 */
 	@Transactional
 	public Juego save(Juego juego) {
-		if (juego.getId() != 0 && !juegoDao.existsById(juego.getId())) {
-			throw new RuntimeException("Juego con ID " + juego.getId() + " no encontrado para modificar.");
+		if (juego.getId() != 0) {
+			if (!juegoDao.existsById(juego.getId())) {
+				throw new CustomException("Juego con ID " + juego.getId() + " no encontrado para modificar", 404);
+			}
 		}
 		return juegoDao.save(juego);
 	}
