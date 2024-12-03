@@ -48,5 +48,13 @@ public interface JuegoDao extends JpaRepository<Juego, Long> {
 
 	@Query("FROM Juego WHERE year =?1")
 	List<Juego> findByYear(long year);
+	
+	/**
+	 * Lista todos los juegos con ventas superiores a la media.
+	 *
+	 * @return Lista de juegos con ventas globales con valor superior a la media.
+	 */
+	@Query("FROM Juego WHERE globalSales > (SELECT AVG(globalSales) FROM Juego)")
+	List<Juego> listarJuegosVentasSuperiores();
 
 }

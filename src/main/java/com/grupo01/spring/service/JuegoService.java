@@ -64,4 +64,12 @@ public interface JuegoService {
 	List<Juego> listarPorConsola(Platform plataforma);
 
 	List<Juego> findByYear(long year);
+	
+	/**
+	 * Recupera todos los juegos con ventas superiores a la media.
+	 *
+	 * @return Lista de juegos con ventas globales con valor superior a la media.
+	 */
+	List<Juego> listarJuegosVentasSuperiores();
+
 }

@@ -167,4 +167,26 @@ public class JuegoServiceTest {
 		assertEquals(2, resultado.size(), "La cantidad de juegos filtrados no coincide");
 		assertEquals("Juego Acción 1", resultado.get(0).getName());
 	}
+	
+	/**
+	 * Verifica que los juegos listados con ventas superiores a la media se recuperan correctamente.
+	 */
+	@Test
+	public void listarJuegosVentasSuperioresYVerificarResultadosCorrectos() {
+		List<Juego> juegos = new ArrayList<>();
+		juegos.add(
+				new Juego(1, 1, "Juego Acción 1", Platform.PS4, 2021, Genre.Action, "Sony", 10.5, 8.3, 4.7, 2.1, 25.6));
+		juegos.add(new Juego(2, 2, "Juego Acción 2", Platform.NES, 2020, Genre.Action, "Microsoft", 12.0, 9.0, 5.0, 3.0,
+				29.0));
+
+		when(juegoDao.listarJuegosVentasSuperiores()).thenReturn(juegos);
+
+		List<Juego> resultado = juegoServiceImpl.listarJuegosVentasSuperiores();
+
+		assertEquals(2, resultado.size(), "La cantidad de juegos filtrados no coincide");
+		assertEquals("Juego Acción 1", resultado.get(0).getName());
+		
+	    verify(juegoDao, times(1)).listarJuegosVentasSuperiores();
+
+	}
 }
