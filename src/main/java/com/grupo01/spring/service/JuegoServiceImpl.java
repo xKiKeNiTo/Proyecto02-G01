@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
+import com.grupo01.spring.model.Platform;
 import com.grupo01.spring.repository.JuegoDao;
 
 @Service
@@ -48,6 +49,7 @@ public class JuegoServiceImpl implements JuegoService {
 		return juegoDao.save(juego);
 	}
 
+
 	@Override
 	public Juego deleteById(long id) {
 		Optional<Juego> juegoOptional = juegoDao.findById(id);
@@ -66,6 +68,11 @@ public class JuegoServiceImpl implements JuegoService {
 	
 	public List<Juego> listarPorSiglo() {
 		return juegoDao.listarPorSiglo();
+	}
+	
+	@Override
+	public List<Juego> listarPorConsola(Platform plataforma) {
+		return juegoDao.listarPorConsola(plataforma);
 	}
 
 }

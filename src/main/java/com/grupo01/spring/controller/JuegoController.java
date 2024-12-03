@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
+import com.grupo01.spring.model.Platform;
 import com.grupo01.spring.service.JuegoServiceImpl;
 import com.grupo01.spring.utils.CSV;
 
@@ -64,9 +65,19 @@ public class JuegoController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Juego> saveJuego(@RequestBody @Valid Juego nuevoJuego) {
-		Juego juegoGuardado = juegoService.save(nuevoJuego);
-		return ResponseEntity.ok(juegoGuardado);
+	public ResponseEntity<?> saveJuego(@RequestBody @Valid Juego nuevoJuego) {
+		try {
+			Juego juegoGuardado = juegoService.save(nuevoJuego);
+			return ResponseEntity.ok(juegoGuardado);
+		} catch (IllegalArgumentException e) {
+			// Manejo específico para valores inválidos del Enum
+			return ResponseEntity.badRequest().body("Error: Valor inválido para plataforma o género.");
+
+		} catch (Exception e) {
+			// Manejo general de otras excepciones
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error: Ocurrió un problema al guardar el juego.");
+		}
 	}
 
 	/**
@@ -80,11 +91,11 @@ public class JuegoController {
 		Juego juegoEditado = juegoService.save(juegoExistente);
 		return ResponseEntity.ok(juegoEditado);
 	}
-	
+
 	@GetMapping("/por-siglo")
-	public List<Juego> listarPorSiglo(){
+	public List<Juego> listarPorSiglo() {
 		return juegoService.listarPorSiglo();
-		
+
 	}
 
 	@DeleteMapping("/{id}")
@@ -104,6 +115,16 @@ public class JuegoController {
 
 		if (juegos.isEmpty()) {
 			return ResponseEntity.status(204).body("No se encontraron juegos para el género especificado.");
+		}
+		return ResponseEntity.ok(juegos);
+	}
+
+	@GetMapping("/consola/{plataforma}")
+	public ResponseEntity<List<Juego>> listarPorConsola(@PathVariable Platform plataforma) {
+		List<Juego> juegos = juegoService.listarPorConsola(plataforma);
+
+		if (juegos == null || juegos.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return ResponseEntity.ok(juegos);
 	}

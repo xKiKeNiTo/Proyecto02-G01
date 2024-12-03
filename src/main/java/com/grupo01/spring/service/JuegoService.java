@@ -3,6 +3,7 @@ import java.util.List;
 
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
+import com.grupo01.spring.model.Platform;
 
 public interface JuegoService {
 	
@@ -17,10 +18,27 @@ public interface JuegoService {
      */
     public Juego save(Juego juego);
     
-    public Juego deleteById(long id);
+
     
     List<Juego> findByGenre(Genre genre);
     // Custom para listar por siglo
     public List<Juego> listarPorSiglo();
+
+    /**
+     * Elimina un juego de la base datos pasado su identificador
+     * 
+     * @param id el identificador del juego a borrar
+     * @return boolean true si se ha eliminado correctamente, false si no
+     */
+    public Juego deleteById(long id);
+    
+    /**
+     * Lista todos los juegos que se publicaron en una plataforma
+     * 
+     * @param plataforma, El nombre de la plataforma de la que queremos obtener el listado
+     * @return Lista con los los juegos
+     */
+    public List<Juego> listarPorConsola(Platform plataforma);
+
     
 }
