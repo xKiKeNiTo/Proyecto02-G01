@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -134,5 +136,9 @@ public class JuegoServiceImpl implements JuegoService {
 	@Override
 	public List<Juego> findByYear(long year) {
 		return juegoDao.findByYear(year);
+	}
+
+	public List<Juego> deleteByConsoleAndBefore(Platform plataform,long year){
+		return juegoDao.deleteByConsoleAndBefore(plataform,year);
 	}
 }

@@ -12,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.grupo01.spring.model.Juego;
+import com.grupo01.spring.model.Genre;
+import com.grupo01.spring.model.Platform;
 import com.grupo01.spring.utils.CSV;
 
 public class CSVTest {

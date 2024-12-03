@@ -49,4 +49,6 @@ public interface JuegoDao extends JpaRepository<Juego, Long> {
 	@Query("FROM Juego WHERE year =?1")
 	List<Juego> findByYear(long year);
 
+	@Query("FROM Juego WHERE platform = :plataform AND year<= :year")
+	List<Juego> deleteByConsoleAndBefore(@Param("plataform") Platform plataform, @Param("year")long year);
 }
