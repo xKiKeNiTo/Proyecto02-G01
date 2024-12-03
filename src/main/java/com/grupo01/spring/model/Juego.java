@@ -17,7 +17,7 @@ import jakarta.validation.constraints.Size;
  * setters y toString
  * 
  * @version 1
- * @author raul_ 
+ * @author raul_
  * @date 29/11/2014
  */
 
