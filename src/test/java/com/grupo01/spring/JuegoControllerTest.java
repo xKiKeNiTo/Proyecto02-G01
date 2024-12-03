@@ -185,4 +185,26 @@ public class JuegoControllerTest {
 
 		verify(juegoService).listarPorConsola(consola);
 	}
+	
+	/**
+	 * Prueba que el endpoint para listar juegos con ventas mayores a la media 
+	 * funciona correctamente.
+	 *
+	 * @throws Exception Si ocurre un error durante la solicitud.
+	 */
+	@Test
+	public void llamoEndpointVerificoLlamadaServicioVentas() throws Exception {
+		List<Juego> juegos = Arrays.asList(
+				new Juego(1, 7, "Super Mario Bros", Platform.NES, 1985, Genre.Platform, "Nintendo", 40.24, 28.32, 6.81,
+						0.77, 75.84),
+				new Juego(2, 23, "Juego Ejemplo", Platform.PC, 1984, Genre.Puzzle, "Nintendo", 23.20, 2.26, 4.22, 0.58,
+						30.26));
+
+		when(juegoService.listarJuegosVentasSuperiores()).thenReturn(juegos);
+
+		mockMvc.perform(get("/juegos/ventas-superiores")).andExpect(status().isOk());
+
+		verify(juegoService, times(1)).listarJuegosVentasSuperiores();
+	}
+
 }
