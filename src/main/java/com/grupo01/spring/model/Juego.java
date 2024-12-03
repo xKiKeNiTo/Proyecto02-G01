@@ -14,10 +14,11 @@ import jakarta.validation.constraints.Size;
 
 /**
  * Clase Juego Modelo para los objetos de tipo Juego con los atributos, getters,
- * setters y toString 29/11/2024
+ * setters y toString
  * 
  * @version 1
- * @author raul_ 29/11/2014
+ * @author raul_ 
+ * @date 29/11/2014
  */
 
 @Entity
@@ -39,7 +40,7 @@ public class Juego {
 	@Enumerated(EnumType.STRING)
 	private Platform platform;
 
-	@Min(value = 0, message = "El año debe ser mayor o igual a 0")
+	@Min(value = 1950, message = "El año debe ser mayor o igual a 1950")
 	private long year;
 
 	@NotNull(message = "El género no puede estar vacío")
