@@ -3,6 +3,7 @@ import java.util.List;
 
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
+import com.grupo01.spring.model.Platform;
 
 public interface JuegoService {
 	
@@ -37,7 +38,7 @@ public interface JuegoService {
      * @param plataforma, El nombre de la plataforma de la que queremos obtener el listado
      * @return Lista con los los juegos
      */
-    public List<Juego> listarPorConsola(String plataforma);
+    public List<Juego> listarPorConsola(Platform plataforma);
 
     
 }
