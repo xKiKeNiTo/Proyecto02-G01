@@ -163,7 +163,7 @@ public class JuegoControllerTest {
 	@Test
 	public void llamoEndpointVerificoLlamadaServicioConsola() throws Exception {
 
-		String consola = "X360";
+		Platform consola = Platform.X360;
 		List<Juego> juegosMock = Arrays.asList(
 				new Juego(1, 1, "Call of Duty Black Ops", Platform.X360, 2010, Genre.Shooter, "Treyarch", 30.56, 15.71,
 						7.61, 2.71, 56.59),

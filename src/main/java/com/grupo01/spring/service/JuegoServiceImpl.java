@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
+import com.grupo01.spring.model.Platform;
 import com.grupo01.spring.repository.JuegoDao;
 
 @Service
@@ -69,7 +70,8 @@ public class JuegoServiceImpl implements JuegoService {
 		return juegoDao.listarPorSiglo();
 	}
 	
-	public List<Juego> listarPorConsola(String plataforma) {
+	@Override
+	public List<Juego> listarPorConsola(Platform plataforma) {
 		return juegoDao.listarPorConsola(plataforma);
 	}
 	@Override
