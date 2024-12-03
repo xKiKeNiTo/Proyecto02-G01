@@ -4,12 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.validation.FieldError;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,8 +69,7 @@ public class GlobalExceptionHandler {
 						: "Desconocido");
 
 		Map<String, Object> error = Map.of("field", fieldName, "message", message, "code",
-				HttpStatus.BAD_REQUEST.value()
-		);
+				HttpStatus.BAD_REQUEST.value());
 
 		return new ResponseEntity<>(Map.of("errors", List.of(error)), HttpStatus.BAD_REQUEST);
 	}
@@ -102,4 +102,39 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(Map.of("errors", mensaje), HttpStatus.METHOD_NOT_ALLOWED);
 	}
+
+	/**
+	 * Captura excepciones de tipo `MethodArgumentTypeMismatchException` y retorna
+	 * un mensaje simplificado.
+	 *
+	 * @param ex Excepción lanzada cuando un argumento no puede ser convertido.
+	 * @return Respuesta con el campo, mensaje de error y código HTTP.
+	 */
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
+		// Obtener el nombre del campo y los valores aceptados si es un Enum
+		String fieldName = ex.getName();
+		String rejectedValue = String.valueOf(ex.getValue());
+		String validValues = ex.getRequiredType() != null && ex.getRequiredType().isEnum()
+				? List.of(ex.getRequiredType().getEnumConstants()).toString()
+				: "N/A";
+
+		String message = String.format("El valor '%s' no es válido para el campo '%s'. Valores aceptados: %s",
+				rejectedValue, fieldName, validValues);
+
+		// Crear el cuerpo de respuesta
+		Map<String, Object> errorResponse = Map.of("field", fieldName, "message", message, "code",
+				HttpStatus.BAD_REQUEST.value());
+
+		return new ResponseEntity<>(Map.of("errors", List.of(errorResponse)), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(NoHandlerFoundException.class)
+	public ResponseEntity<Object> handleNoHandlerFound(NoHandlerFoundException ex) {
+		Map<String, Object> errorResponse = Map.of("message", "La ruta solicitada no existe: " + ex.getRequestURL(),
+				"code", 404);
+
+		return new ResponseEntity<>(Map.of("errors", List.of(errorResponse)), HttpStatus.NOT_FOUND);
+	}
+
 }

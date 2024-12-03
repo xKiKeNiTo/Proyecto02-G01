@@ -113,7 +113,7 @@ public class JuegoController {
 	 * @param id del juego a eliminar.
 	 * @return ResponseEntity con detalles del juego eliminado o mensaje de error.
 	 */
-	@DeleteMapping("/{id}")
+	@DeleteMapping("deleteById/{id}")
 	public ResponseEntity<RespuestaApi<Juego>> eliminarPorId(@PathVariable long id) {
 		Juego juegoEliminado = juegoService.deleteById(id);
 		if (juegoEliminado != null) {
@@ -155,15 +155,25 @@ public class JuegoController {
 		return ResponseEntity.ok(juegos);
 	}
 
-	@GetMapping("/{year}")
+	@GetMapping("/year/{year}")
 	public ResponseEntity<RespuestaApi<List<Juego>>> findByYear(@PathVariable long year) {
-		List<Juego> juegos = juegoService.findByYear(year);
-		if (juegos.isEmpty()) {
-			return ResponseEntity.status(204)
-					.body(new RespuestaApi<>("No se encontraron juegos para ese año", 204, null));
-		}
+	    List<Juego> juegos = juegoService.findByYear(year);
+	    if (juegos.isEmpty()) {
+	        return ResponseEntity.status(404)
+	                .body(new RespuestaApi<>("No se encontraron juegos para ese año", 404, null));
+	    }
 
-		return ResponseEntity.status(200).body(new RespuestaApi<>("Lista de juegos encontrada", 200, juegos));
+	    return ResponseEntity.status(200).body(new RespuestaApi<>("Lista de juegos encontrada", 200, juegos));
+	}
+
+	/**
+	 * Obtiene los juegos con ventas superiores a la media.
+	 *
+	 * @return Lista de juegos con ventas globales con valor superior a la media.
+	 */
+	@GetMapping("/ventas-superiores")
+	public List<Juego> listarJuegosVentasSuperiores() {
+		return juegoService.listarJuegosVentasSuperiores();
 	}
 
 
@@ -186,5 +196,7 @@ public class JuegoController {
 					.body(new RespuestaApi<>("No se encontraron juegos", 204, null));
 		}
 	}
+
+
 
 }
