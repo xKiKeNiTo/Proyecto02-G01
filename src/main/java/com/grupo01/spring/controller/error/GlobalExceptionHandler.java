@@ -14,15 +14,21 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Manejador de excepciones para errores de validación
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        List<String> errors = ex.getBindingResult()
-            .getFieldErrors()
-            .stream()
-            .map(fieldError -> fieldError.getDefaultMessage()) // Obtiene el mensaje de error
-            .collect(Collectors.toList());
+	// Manejador de excepciones para errores de validación
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+		List<String> errors = ex.getBindingResult().getFieldErrors().stream()
+				.map(fieldError -> fieldError.getDefaultMessage()) // Obtiene el mensaje de error
+				.collect(Collectors.toList());
 
-        return new ResponseEntity<>(Map.of("errors", errors), HttpStatus.BAD_REQUEST); // Devuelve los errores con el estado 400
-    }
+		return new ResponseEntity<>(Map.of("errors", errors), HttpStatus.BAD_REQUEST); // Devuelve los errores con el
+																						// estado 400
+	}
+
+	@ExceptionHandler(CustomException.class)
+	public ResponseEntity<Object> handleCustomException(CustomException ex) {
+		Map<String, Object> errorResponse = Map.of("message", ex.getMessage(), "code", ex.getErrorCode());
+		return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(ex.getErrorCode()));
+	}
+
 }

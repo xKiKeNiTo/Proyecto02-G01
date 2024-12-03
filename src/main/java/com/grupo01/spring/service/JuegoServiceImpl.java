@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.grupo01.spring.controller.error.CustomException;
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.repository.JuegoDao;
@@ -39,15 +40,17 @@ public class JuegoServiceImpl implements JuegoService {
 		return totalSaved; // Retornar el total de registros guardados
 	}
 
+	/**
+	 * Metodo con la implementacion del codigo para guardar
+	 */
 	public Juego save(Juego juego) {
 		if (juego.getId() != 0) {
 			if (!juegoDao.existsById(juego.getId())) {
-				throw new RuntimeException("Juego con ID " + juego.getId() + " no encontrado para modificar.");
+				throw new CustomException("Juego con ID " + juego.getId() + " no encontrado para modificar", 404);
 			}
 		}
 		return juegoDao.save(juego);
 	}
-
 
 	@Override
 	public Juego deleteById(long id) {
@@ -64,11 +67,15 @@ public class JuegoServiceImpl implements JuegoService {
 	public List<Juego> findByGenre(Genre genre) {
 		return juegoDao.findByGenre(genre);
 	}
-	
+
 	public List<Juego> listarPorSiglo() {
 		return juegoDao.listarPorSiglo();
 	}
-	
+
+	/**
+	 * Metodo que ejecuta una Query de JuegoDao y nos devuelve una lista con los
+	 * juegos de una plataforma
+	 */
 	public List<Juego> listarPorConsola(String plataforma) {
 		return juegoDao.listarPorConsola(plataforma);
 	}
