@@ -179,7 +179,7 @@ public class JuegoController {
 	@DeleteMapping("/{plataform}/{year}")
 	public ResponseEntity<RespuestaApi<List<Juego>>> deleteByConsoleAndBefore(Platform plataform,long year){
 		List<Juego> juegosEliminados = juegoService.deleteByConsoleAndBefore(plataform,year);
-		if (juegosEliminados != null) {
+		if (!juegosEliminados.isEmpty()) {
 			return ResponseEntity.ok(new RespuestaApi<>("Lista de juegos eliminada", 200, juegosEliminados));
 		} else {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT)

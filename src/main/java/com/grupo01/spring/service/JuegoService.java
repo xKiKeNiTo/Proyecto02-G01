@@ -63,5 +63,24 @@ public interface JuegoService {
 	 */
 	List<Juego> listarPorConsola(Platform plataforma);
 
+	/**
+	 * find by year
+	 *
+	 * @param year year
+	 * @return {@link List}
+	 * @see List
+	 * @see Juego
+	 */
 	List<Juego> findByYear(long year);
-}
+
+	/**
+	 * delete by console and before
+	 *
+	 * @param plataform plataform
+	 * @param year year
+	 * @return {@link List}
+	 * @see List
+	 * @see Juego
+	 */
+	List<Juego>	deleteByConsoleAndBefore(Platform plataform,long year);
+ }

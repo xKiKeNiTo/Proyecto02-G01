@@ -138,7 +138,12 @@ public class JuegoServiceImpl implements JuegoService {
 		return juegoDao.findByYear(year);
 	}
 
-	public List<Juego> deleteByConsoleAndBefore(Platform plataform,long year){
-		return juegoDao.deleteByConsoleAndBefore(plataform,year);
+	@Transactional
+	public List<Juego> deleteByConsoleAndBefore(Platform plataforma,long year){
+		List<Juego> juegosEliminados = juegoDao.deleteByConsoleAndBefore(plataforma, year);
+		if (!juegosEliminados.isEmpty()) {
+			juegoDao.deleteAllInBatch(juegosEliminados);
+		}
+		return juegosEliminados;
 	}
 }
