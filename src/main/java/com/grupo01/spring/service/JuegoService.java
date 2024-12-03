@@ -80,8 +80,6 @@ public interface JuegoService {
 	 */
 	List<Juego> listarJuegosVentasSuperiores();
 
-}
-
 	/**
 	 * delete by console and before
 	 *
