@@ -130,4 +130,9 @@ public class JuegoServiceImpl implements JuegoService {
 	public List<Juego> listarPorConsola(Platform plataforma) {
 		return juegoDao.listarPorConsola(plataforma);
 	}
+
+	@Override
+	public List<Juego> findByYear(long year) {
+		return juegoDao.findByYear(year);
+	}
 }

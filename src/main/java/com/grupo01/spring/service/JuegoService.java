@@ -62,4 +62,6 @@ public interface JuegoService {
 	 * @return Lista de juegos publicados en la plataforma especificada.
 	 */
 	List<Juego> listarPorConsola(Platform plataforma);
+
+	List<Juego> findByYear(long year);
 }
