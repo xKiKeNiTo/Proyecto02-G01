@@ -165,6 +165,16 @@ public class JuegoController {
 
 	    return ResponseEntity.status(200).body(new RespuestaApi<>("Lista de juegos encontrada", 200, juegos));
 	}
+	
+	/**
+	 * Obtiene los juegos con ventas superiores a la media.
+	 *
+	 * @return Lista de juegos con ventas globales con valor superior a la media.
+	 */
+	@GetMapping("/ventas-superiores")
+	public List<Juego> listarJuegosVentasSuperiores() {
+		return juegoService.listarJuegosVentasSuperiores();
+	}
 
 
 
