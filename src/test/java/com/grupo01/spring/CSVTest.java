@@ -34,9 +34,11 @@ public class CSVTest {
 		csv.leerCSV();
 
 		// Verifica que las líneas se hayan leído correctamente
-		int expectedLines = 16599; // Cambia este valor al número esperado de registros (excluyendo el encabezado)
-		assertEquals(expectedLines, csv.getJuegos().size(),
-				"El número de registros leídos no coincide con el esperado.");
+		int registrosLeidos = csv.getJuegos().size();
+		System.out.println("Registros leídos: " + registrosLeidos); // Debug
+
+		int expectedLines = 16599; // Cambia este valor al número esperado de registros
+		assertEquals(expectedLines, registrosLeidos, "El número de registros leídos no coincide con el esperado.");
 	}
 
 	@Test
@@ -49,14 +51,10 @@ public class CSVTest {
 		List<Juego> juegos = csv.getJuegos();
 
 		// Comprobaciones
-		assertNotNull(juegos, "La lista de juegos no deberías er nula");
+		assertNotNull(juegos, "La lista de juegos no debería ser nula");
 		assertFalse(juegos.isEmpty(), "La lista de juegos no debería estar vacía");
 
-		assertEquals(2, juegos.size(), "El tamaño de la lsita de juegos no coincide con el esperado"); // Cambia este
-																										// valor al
-																										// número
-																										// esperado de
-																										// registros
+		assertEquals(2, juegos.size(), "El tamaño de la lista de juegos no coincide con el esperado");
 
 		// Verifica los datos de los objetos
 		Juego juego1 = juegos.get(0);
@@ -69,5 +67,4 @@ public class CSVTest {
 		assertEquals("Juego Ejemplo", juego2.getName());
 		assertEquals("PC", juego2.getPlatform().toString());
 	}
-
 }
