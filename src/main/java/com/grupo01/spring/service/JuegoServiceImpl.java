@@ -145,7 +145,7 @@ public class JuegoServiceImpl implements JuegoService {
 	}
 
 	@Transactional
-	public List<Juego> deleteByConsoleAndBefore(Platform plataforma,long year){
+	public List<Juego> deleteByConsoleAndBefore(Platform plataforma,Long year){
 		List<Juego> juegosEliminados = juegoDao.deleteByConsoleAndBefore(plataforma, year);
 		if (!juegosEliminados.isEmpty()) {
 			juegoDao.deleteAllInBatch(juegosEliminados);

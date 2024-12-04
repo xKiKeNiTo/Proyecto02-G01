@@ -89,5 +89,5 @@ public interface JuegoService {
 	 * @see List
 	 * @see Juego
 	 */
-	List<Juego>	deleteByConsoleAndBefore(Platform plataform,long year);
+	List<Juego>	deleteByConsoleAndBefore(Platform plataform,Long year);
  }

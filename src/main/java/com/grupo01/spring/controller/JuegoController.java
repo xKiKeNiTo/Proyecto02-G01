@@ -157,13 +157,13 @@ public class JuegoController {
 
 	@GetMapping("/year/{year}")
 	public ResponseEntity<RespuestaApi<List<Juego>>> findByYear(@PathVariable long year) {
-	    List<Juego> juegos = juegoService.findByYear(year);
-	    if (juegos.isEmpty()) {
-	        return ResponseEntity.status(404)
-	                .body(new RespuestaApi<>("No se encontraron juegos para ese año", 404, null));
-	    }
+		List<Juego> juegos = juegoService.findByYear(year);
+		if (juegos.isEmpty()) {
+			return ResponseEntity.status(404)
+					.body(new RespuestaApi<>("No se encontraron juegos para ese año", 404, null));
+		}
 
-	    return ResponseEntity.status(200).body(new RespuestaApi<>("Lista de juegos encontrada", 200, juegos));
+		return ResponseEntity.status(200).body(new RespuestaApi<>("Lista de juegos encontrada", 200, juegos));
 	}
 
 	/**
@@ -176,27 +176,25 @@ public class JuegoController {
 		return juegoService.listarJuegosVentasSuperiores();
 	}
 
-
 	/**
 	 * Eliminar por consola y antes de año
 	 *
 	 * @param plataform plataform
-	 * @param year year
+	 * @param year      year
 	 * @return {@link ResponseEntity}
 	 * @see ResponseEntity
 	 * @see RespuestaApi
 	 */
-	@DeleteMapping("/{plataform}/{year}")
-	public ResponseEntity<RespuestaApi<List<Juego>>> deleteByConsoleAndBefore(Platform plataform,long year){
-		List<Juego> juegosEliminados = juegoService.deleteByConsoleAndBefore(plataform,year);
-		if (!juegosEliminados.isEmpty()) {
+	@DeleteMapping("/deleteByConsoleAndBefore/{platform}/{year}")
+	public ResponseEntity<RespuestaApi<List<Juego>>> deleteByConsoleAndBefore(Platform platform, Long year) {
+		List<Juego> juegosEliminados = juegoService.deleteByConsoleAndBefore(platform, year);
+
+		if (juegosEliminados != null && !juegosEliminados.isEmpty()) {
 			return ResponseEntity.ok(new RespuestaApi<>("Lista de juegos eliminada", 200, juegosEliminados));
 		} else {
-			return ResponseEntity.status(HttpStatus.NO_CONTENT)
-					.body(new RespuestaApi<>("No se encontraron juegos", 204, null));
+			return ResponseEntity
+					.ok(new RespuestaApi<>("No se encontraron juegos para eliminar", 200, juegosEliminados));
 		}
 	}
-
-
 
 }

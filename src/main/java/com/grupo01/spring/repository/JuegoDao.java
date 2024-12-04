@@ -56,7 +56,7 @@ public interface JuegoDao extends JpaRepository<Juego, Long> {
 	 */
 	@Query("FROM Juego WHERE year =?1")
 	List<Juego> findByYear(long year);
-	
+
 	/**
 	 * Lista todos los juegos con ventas superiores a la media.
 	 *
@@ -69,11 +69,11 @@ public interface JuegoDao extends JpaRepository<Juego, Long> {
 	 * delete by console and before
 	 *
 	 * @param plataform plataform
-	 * @param year year
+	 * @param year      year
 	 * @return {@link List}
 	 * @see List
 	 * @see Juego
 	 */
 	@Query("FROM Juego WHERE platform = :plataform AND year<= :year")
-	List<Juego> deleteByConsoleAndBefore(@Param("plataform") Platform plataform, @Param("year")long year);
+	List<Juego> deleteByConsoleAndBefore(@Param("plataform") Platform plataform, @Param("year") Long year);
 }
