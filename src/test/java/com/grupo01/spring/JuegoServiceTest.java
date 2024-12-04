@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.grupo01.spring.model.Genre;
@@ -21,7 +22,14 @@ import com.grupo01.spring.model.Platform;
 import com.grupo01.spring.repository.JuegoDao;
 import com.grupo01.spring.service.JuegoServiceImpl;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+
 @SpringBootTest
+@AutoConfigureMockMvc
 public class JuegoServiceTest {
 
 	@Mock
@@ -87,28 +95,27 @@ public class JuegoServiceTest {
 
 	@Test
 	public void listarTodosLosJuegosYVerificarQueSeDevuelvenCorrectamente() {
-	    List<Juego> juegos = new ArrayList<>();
-	    for (int i = 0; i < 5; i++) { // Crear 5 registros simulados
-	        Juego juego = new Juego();
-	        juego.setRank(i + 1);
-	        juego.setName("Juego " + (i + 1));
-	        juegos.add(juego);
-	    }
+		List<Juego> juegos = new ArrayList<>();
+		for (int i = 0; i < 5; i++) { // Crear 5 registros simulados
+			Juego juego = new Juego();
+			juego.setRank(i + 1);
+			juego.setName("Juego " + (i + 1));
+			juegos.add(juego);
+		}
 
-	    // Configurar el mock para que devuelva la lista simulada
-	    when(juegoDao.findAll()).thenReturn(juegos);
+		// Configurar el mock para que devuelva la lista simulada
+		when(juegoDao.findAll()).thenReturn(juegos);
 
-	    // Llamar al método del servicio
-	    List<Juego> resultado = juegoServiceImpl.findAll();
+		// Llamar al método del servicio
+		List<Juego> resultado = juegoServiceImpl.findAll();
 
-	    // Verificar resultados
-	    assertEquals(juegos.size(), resultado.size(), "La cantidad de juegos devuelta no coincide");
-	    assertEquals("Juego 1", resultado.get(0).getName(), "El primer juego no coincide");
+		// Verificar resultados
+		assertEquals(juegos.size(), resultado.size(), "La cantidad de juegos devuelta no coincide");
+		assertEquals("Juego 1", resultado.get(0).getName(), "El primer juego no coincide");
 
-	    // Verificar que el repositorio se llamó
-	    verify(juegoDao, times(1)).findAll();
+		// Verificar que el repositorio se llamó
+		verify(juegoDao, times(1)).findAll();
 	}
-
 
 	@Test
 	public void modificarJuegoExistenteYVerificarActualizacionCorrecta() {
@@ -142,27 +149,71 @@ public class JuegoServiceTest {
 			juegoServiceImpl.save(juegoInexistente);
 		});
 	}
-	
+
 	@Test
-    public void listarJuegosFiltradosPorGeneroYVerificarResultadosCorrectos() {
-        // Crear datos simulados
-        List<Juego> juegos = new ArrayList<>();
-        juegos.add(new Juego(1, 1, "Juego Acción 1", Platform.PS4, 2021, Genre.Action, "Sony", 10.5, 8.3, 4.7, 2.1, 25.6));
-        juegos.add(new Juego(2, 2, "Juego Acción 2", Platform.NES, 2020, Genre.Action, "Microsoft", 12.0, 9.0, 5.0, 3.0, 29.0));
+	public void listarJuegosFiltradosPorGeneroYVerificarResultadosCorrectos() {
+		// Crear datos simulados
+		List<Juego> juegos = new ArrayList<>();
+		juegos.add(
+				new Juego(1, 1, "Juego Acción 1", Platform.PS4, 2021, Genre.Action, "Sony", 10.5, 8.3, 4.7, 2.1, 25.6));
+		juegos.add(new Juego(2, 2, "Juego Acción 2", Platform.NES, 2020, Genre.Action, "Microsoft", 12.0, 9.0, 5.0, 3.0,
+				29.0));
 
-        // Configurar el mock para que devuelva la lista filtrada
-        when(juegoDao.findByGenre(Genre.Action)).thenReturn(juegos);
+		// Configurar el mock para que devuelva la lista filtrada
+		when(juegoDao.findByGenre(Genre.Action)).thenReturn(juegos);
 
-        // Llamar al método del servicio
-        List<Juego> resultado = juegoServiceImpl.findByGenre(Genre.Action);
+		// Llamar al método del servicio
+		List<Juego> resultado = juegoServiceImpl.findByGenre(Genre.Action);
 
-        // Verificar los resultados
-        assertEquals(2, resultado.size(), "La cantidad de juegos filtrados no coincide");
-        assertEquals("Juego Acción 1", resultado.get(0).getName(), "El primer juego filtrado no coincide");
-        assertEquals("Juego Acción 2", resultado.get(1).getName(), "El segundo juego filtrado no coincide");
+		// Verificar los resultados
+		assertEquals(2, resultado.size(), "La cantidad de juegos filtrados no coincide");
+		assertEquals("Juego Acción 1", resultado.get(0).getName(), "El primer juego filtrado no coincide");
+		assertEquals("Juego Acción 2", resultado.get(1).getName(), "El segundo juego filtrado no coincide");
 
-        // Verificar que el repositorio fue llamado exactamente una vez
-        verify(juegoDao, times(1)).findByGenre(Genre.Action);
-    }
-	
+		// Verificar que el repositorio fue llamado exactamente una vez
+		verify(juegoDao, times(1)).findByGenre(Genre.Action);
+	}
+
+	@Test
+	public void listarJuegosVentasSuperioresYVerificarResultadosCorrectos() {
+
+		List<Juego> juegos = new ArrayList<>();
+		juegos.add(new Juego(1, 1, "Juego Top 1", Platform.PS4, 2021, Genre.Action, "Sony", 20.5, 8.3, 4.7, 2.1, 35.6));
+		juegos.add(new Juego(2, 2, "Juego Top 2", Platform.NES, 2020, Genre.Platform, "Nintendo", 25.0, 9.0, 5.0, 3.0,
+				42.0));
+		juegos.add(new Juego(3, 3, "Juego Normal", Platform.PC, 2019, Genre.Shooter, "Microsoft", 10.0, 5.0, 2.0, 1.0,
+				18.0));
+
+		double ventasMinimas = 20.0;
+		when(juegoDao.listarJuegosVentasSuperiores(ventasMinimas))
+				.thenReturn(juegos.stream().filter(j -> j.getGlobalSales() > ventasMinimas).toList());
+
+		List<Juego> resultado = juegoServiceImpl.listarJuegosVentasSuperiores(ventasMinimas);
+
+		assertEquals(2, resultado.size(), "La cantidad de juegos filtrados no coincide con el criterio de ventas");
+		assertEquals("Juego Top 1", resultado.get(0).getName(), "El primer juego filtrado no coincide");
+		assertEquals("Juego Top 2", resultado.get(1).getName(), "El segundo juego filtrado no coincide");
+
+		verify(juegoDao, times(1)).listarJuegosVentasSuperiores(ventasMinimas);
+	}
+
+	@Test
+	public void testConsolaYAnyoInvalido() throws Exception {
+		// Configurar datos inválidos
+		String consolaInvalida = "InvalidConsole";
+		int anyoInvalido = -100;
+
+		// Configurar el comportamiento del mock para manejar datos inválidos
+		when(juegoDao.deleteByConsoleAndBefore(any(Platform.class), eq(anyoInvalido)))
+				.thenThrow(new IllegalArgumentException("Plataforma o año inválido"));
+
+		// Realizar la petición al endpoint del controlador
+		mockMvc.perform(get("/juegos").param("platform", consolaInvalida).param("year", String.valueOf(anyoInvalido)))
+				.andExpect(status().isBadRequest()) // Verificar que el estatus HTTP es 400 (Bad Request)
+				.andExpect(jsonPath("$.error").value("Plataforma o año inválido")); // Verificar el mensaje de error
+
+		// Verificar que el servicio fue llamado con los parámetros correctos
+		verify(juegoDao, times(1)).deleteByConsoleAndBefore(consolaInvalida, anyoInvalido);
+	}
+
 }
