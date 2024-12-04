@@ -3,84 +3,90 @@ package com.grupo01.spring.utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-//import java.io.FileWriter;
 import java.io.IOException;
-//import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.grupo01.spring.model.Genre;
 import com.grupo01.spring.model.Juego;
 import com.grupo01.spring.model.Platform;
-//import com.grupo01.spring.service.JuegoService;
-import com.grupo01.spring.service.JuegoServiceImpl;
 
 /**
- * Clase para las utilidades del CSV
+ * Clase para las utilidades del manejo de archivos CSV.
  * 
+ * Proporciona métodos para leer y procesar datos desde un archivo CSV.
+ *
  * @version 1.0
- * @author kikev
+ * @author Kike
+ * @date 29/11/2024
  */
-
 @Component
 public class CSV {
 
-	public static File fichero = new File("vgsales.csv");
-
 	private static final Logger log = Logger.getLogger(CSV.class.getName());
 
-	private List<String> lineasCSV;
-	
-	public void setLineasCSV(List<String> lineasCSV) {
-	    this.lineasCSV = lineasCSV;
-	}
+	/**
+	 * Archivo CSV de entrada.
+	 */
+	public static final File fichero = new File("vgsales.csv");
 
-	// Constructor
+	/**
+	 * Líneas leídas desde el archivo CSV.
+	 */
+	private List<String> lineasCSV;
+
+	/**
+	 * Constructor principal. Inicializa la lista para almacenar líneas del CSV.
+	 */
 	public CSV() {
 		this.lineasCSV = new ArrayList<>();
 	}
 
 	/**
-	 * Método para leer un archivo CSV y cargarlo en una lista de listas.
+	 * Establece manualmente las líneas CSV para pruebas o personalización.
 	 * 
+	 * @param lineasCSV Lista de líneas en formato CSV.
 	 */
+	public void setLineasCSV(List<String> lineasCSV) {
+		this.lineasCSV = lineasCSV;
+	}
 
+	/**
+	 * Método para leer un archivo CSV y cargar los datos en una lista de cadenas.
+	 * 
+	 * @throws IOException Si ocurre un error al leer el archivo.
+	 */
 	public void leerCSV() throws IOException {
 		try (BufferedReader br = new BufferedReader(new FileReader(fichero))) {
 			String linea;
 			boolean primeraLinea = true; // Para saltar el encabezado
 
 			while ((linea = br.readLine()) != null) {
-				// Saltar la primera línea (encabezado)
 				if (primeraLinea) {
-					primeraLinea = false;
+					primeraLinea = false; // Saltar la primera línea
 					continue;
 				}
-				// Usamos una expresión regular para manejar las comas dentro de las comillas
-				String[] valores = linea.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-				lineasCSV.add(linea.trim()); // Almacenar solo las líneas de datos
+				lineasCSV.add(linea.trim());
 			}
 		}
 	}
 
 	/**
-	 * Obtener los juegos leídos del archivo CSV y guardarlos en la base de datos.
+	 * Convierte las líneas del archivo CSV en objetos `Juego`.
+	 * 
+	 * @return Lista de objetos `Juego` procesados desde el archivo CSV.
 	 */
 	public List<Juego> getJuegos() {
 		List<Juego> juegos = new ArrayList<>();
 
-		// Convertir cada línea en un objeto Juego
 		for (String linea : lineasCSV) {
 			String[] valores = linea.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
-
 			try {
 				int rank = Integer.parseInt(valores[0].trim());
 				String name = valores[1].trim();
-
 				Platform platform = Platform.fromString(valores[2].trim());
 
 				int year;
@@ -103,10 +109,10 @@ public class CSV {
 				juegos.add(juego);
 
 			} catch (IllegalArgumentException e) {
-				System.err.println("Error al procesar línea: " + linea + " -> " + e.getMessage());
+				log.warning("Error al procesar línea: " + linea + " -> " + e.getMessage());
 			}
 		}
-		return juegos; // Asegúrate de que este método devuelva la lista
+		return juegos;
 	}
 
 	/**
@@ -119,72 +125,7 @@ public class CSV {
 		try {
 			return Double.parseDouble(value.trim());
 		} catch (NumberFormatException e) {
-			return 0.0; // Valor predeterminado para errores de formato
+			return 0.0; // Valor predeterminado
 		}
 	}
-
-	/**
-	 * Metodo para guardar, añadiendo, una lista de objetos genericos, comun para
-	 * Juegos, Generos, Plataformas...
-	 * 
-	 * @param <T>     objeto generico
-	 * @param objetos Lista de objetos generica, si se quiere añadir uno solo, se ha
-	 *                de meter en una lista de un solo objeto
-	 * @param f       objeto que hace referencia al fichero CSV, en este caso,
-	 *                estatico en la clase CSV
-	 * @return true si se ha conseguido hacer con exito, false si no
-	 */
-//	public static <T> boolean guardarCSV(List<T> objetos, File f) {
-//
-//		if (objetos == null || objetos.isEmpty()) {
-//			System.err.println("No hay objetos para guardar");
-//			log.warning("No hay objetos para guardar");
-//			return false;
-//		}
-//
-//		try (FileWriter fw = new FileWriter(f, true)) { // "true" añade el contenido y no lo sobreescribe
-//			// Escribir encabezado
-//			Class<?> clase = objetos.get(0).getClass(); // Obtener la clase del primer objeto
-//			Field[] campos = clase.getDeclaredFields(); // Obtener los campos de la clase
-//
-////			if (!f.exists()) {
-////
-////				// Escribir nombres de los campos como encabezado
-////				for (int i = 0; i < campos.length; i++) {
-////					fw.write(campos[i].getName());
-////					if (i < campos.length - 1) {
-////						fw.write(",");
-////					}
-////				}
-////				fw.write("\n");
-////
-////			}
-//
-//			// Escribir los valores de los objetos
-//			for (T objeto : objetos) {
-//				fw.write("\n");
-//				for (int i = 0; i < campos.length; i++) {
-//					campos[i].setAccessible(true); // Permitir acceso a campos privados
-//					Object valor = campos[i].get(objeto); // Obtener el valor del campo
-//					fw.write(valor != null ? valor.toString() : ""); // Manejar valores nulos
-//					if (i < campos.length - 1) {
-//						fw.write(",");
-//					}
-//				}
-//			}
-//
-//			System.out.println("Archivo CSV guardado exitosamente");
-//			log.info("Archivo CSV guardado exitosamente");
-//			return true;
-//
-//		} catch (IOException | IllegalAccessException e) {
-//
-//			System.err.println("Error al guardar el CSV: " + e.getMessage());
-//			log.warning("Error al guardar el CSV");
-//			return false;
-//
-//		}
-//
-//	}
-
 }
